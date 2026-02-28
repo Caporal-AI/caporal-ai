@@ -1,0 +1,109 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://caporal.ai/schemas/optimize-request.schema.json",
+  "title": "OptimizeRequest",
+  "type": "object",
+  "required": ["animalProfile", "ingredients", "options"],
+  "properties": {
+    "animalProfile": {
+      "type": "object",
+      "required": ["intakeDmKgPerDay", "constraints"],
+      "properties": {
+        "intakeDmKgPerDay": { "type": "number", "exclusiveMinimum": 0 },
+        "constraints": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["code", "unit"],
+            "properties": {
+              "code": { "type": "string" },
+              "min": { "type": "number" },
+              "max": { "type": "number" },
+              "unit": {
+                "type": "string",
+                "enum": ["fraction_dm", "pct_dm", "kg_per_day", "per_kg_dm"]
+              },
+              "label": { "type": "string" }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "ingredients": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "priceMxnPerKgAsFed",
+          "dryMatterPct",
+          "nutrients",
+          "boundsPct"
+        ],
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "priceMxnPerKgAsFed": { "type": "number", "minimum": 0 },
+          "dryMatterPct": { "type": "number", "exclusiveMinimum": 0, "maximum": 100 },
+          "nutrients": {
+            "type": "object",
+            "additionalProperties": { "type": "number" }
+          },
+          "boundsPct": {
+            "type": "object",
+            "required": ["min", "max"],
+            "properties": {
+              "min": { "type": "number", "minimum": 0, "maximum": 100 },
+              "max": { "type": "number", "minimum": 0, "maximum": 100 }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "options": {
+      "type": "object",
+      "required": ["maxSolveMs", "objective"],
+      "properties": {
+        "maxSolveMs": { "type": "integer", "minimum": 1 },
+        "objective": { "const": "MIN_COST" }
+      },
+      "additionalProperties": false
+    },
+    "batchContext": {
+      "type": "object",
+      "required": [
+        "batchId",
+        "breed",
+        "headCount",
+        "currentAverageWeightKg",
+        "targetSaleWeightKg",
+        "daysOnFeed"
+      ],
+      "properties": {
+        "batchId": { "type": "string" },
+        "breed": { "type": "string" },
+        "headCount": { "type": "integer", "minimum": 1 },
+        "currentAverageWeightKg": { "type": "number", "exclusiveMinimum": 0 },
+        "targetSaleWeightKg": { "type": "number", "exclusiveMinimum": 0 },
+        "daysOnFeed": { "type": "integer", "minimum": 0 },
+        "climate": {
+          "type": "object",
+          "properties": {
+            "avgTemperatureC": { "type": "number" },
+            "humidityPct": { "type": "number", "minimum": 0, "maximum": 100 }
+          },
+          "required": ["avgTemperatureC", "humidityPct"],
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

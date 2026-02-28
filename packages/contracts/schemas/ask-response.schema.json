@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://caporal.ai/schemas/ask-response.schema.json",
+  "title": "AskResponse",
+  "type": "object",
+  "required": ["answer", "citations", "safetyFlags"],
+  "properties": {
+    "answer": { "type": "string" },
+    "citations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["docId", "title", "snippet", "score"],
+        "properties": {
+          "docId": { "type": "string" },
+          "title": { "type": "string" },
+          "snippet": { "type": "string" },
+          "score": { "type": "number" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "safetyFlags": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  },
+  "additionalProperties": false
+}

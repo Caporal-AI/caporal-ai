@@ -1,0 +1,20 @@
+{
+  "name": "caporal-ai",
+  "private": true,
+  "version": "0.1.0",
+  "workspaces": [
+    "apps/*",
+    "services/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "docker compose -f infra/docker-compose.yml up --build",
+    "dev:down": "docker compose -f infra/docker-compose.yml down",
+    "lint": "npm run lint -ws --if-present",
+    "test": "npm run test -ws --if-present"
+  },
+  "engines": {
+    "node": ">=20",
+    "npm": ">=10"
+  }
+}
