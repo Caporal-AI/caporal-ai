@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-from app.core.rag_store import evaluate_retrieval, retrieve_enriched_chunks
+from app.core.rag_store import evaluate_retrieval, repair_rag_index, retrieve_enriched_chunks
 from app.models.contracts import (
     RagChunkResult,
     RagEvaluateRequest,
@@ -64,3 +64,8 @@ def rag_evaluate(payload: RagEvaluateRequest) -> RagEvaluateResponse:
         summary=dict(result.get("summary", {})),
         rows=rows,
     )
+
+
+@router.post("/rag/reindex")
+def rag_reindex() -> dict[str, int | bool]:
+    return repair_rag_index(force=True)

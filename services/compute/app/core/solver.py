@@ -9,6 +9,9 @@ from scipy.optimize import linprog
 from app.models.contracts import (
     Constraint,
     ConstraintReportItem,
+    InfeasibilityAlternative,
+    InfeasibilityAnalysis,
+    InfeasibilityPriorityAction,
     MixItem,
     OptimizeRequest,
     OptimizeResponse,
@@ -35,6 +38,18 @@ def solve_optimize(payload: OptimizeRequest) -> OptimizeResponse:
             payload,
             warnings=["No ingredients were provided to the solver."],
             runtime_ms=_runtime_ms(started_at),
+            infeasibility_analysis=InfeasibilityAnalysis(
+                reasonCode="UNKNOWN",
+                summary="No hay ingredientes disponibles para construir una mezcla.",
+                priorityActions=[
+                    InfeasibilityPriorityAction(
+                        priority=1,
+                        title="Cargar ingredientes activos con precio",
+                        reason="Sin ingredientes y precios vigentes no se puede formular la dieta.",
+                    )
+                ],
+                alternatives=[],
+            ),
         )
 
     intake = payload.animalProfile.intakeDmKgPerDay
@@ -49,6 +64,13 @@ def solve_optimize(payload: OptimizeRequest) -> OptimizeResponse:
     ub = np.array([(item.boundsPct.max / 100.0) * intake for item in ingredients], dtype=float)
 
     warnings: list[str] = []
+    invalid_nutrient_entries = _collect_invalid_nutrient_entries(ingredients)
+    if invalid_nutrient_entries:
+        warnings.append(
+            "Se detectaron valores nutricionales no validos; se tomaron como 0 para evitar fallos."
+        )
+        sample = ", ".join(invalid_nutrient_entries[:4])
+        warnings.append(f"Ingredientes/campos afectados: {sample}.")
 
     invalid_bounds = [
         item.name for item, lower, upper in zip(ingredients, lb, ub, strict=True) if lower > upper + _TOL
@@ -57,7 +79,12 @@ def solve_optimize(payload: OptimizeRequest) -> OptimizeResponse:
         warnings.append(
             "Invalid bounds detected (min > max) for: " + ", ".join(sorted(invalid_bounds))
         )
-        return _build_infeasible_response(payload, warnings, _runtime_ms(started_at))
+        return _build_infeasible_response(
+            payload,
+            warnings,
+            _runtime_ms(started_at),
+            infeasibility_analysis=_build_invalid_bounds_analysis(payload, invalid_bounds),
+        )
 
     lower_sum = float(np.sum(lb))
     upper_sum = float(np.sum(ub))
@@ -66,14 +93,24 @@ def solve_optimize(payload: OptimizeRequest) -> OptimizeResponse:
             f"Lower bounds sum ({lower_sum:.4f}) exceeds intake target ({intake:.4f})."
         )
         warnings.append("Suggestion: relax one or more ingredient minimum inclusion constraints.")
-        return _build_infeasible_response(payload, warnings, _runtime_ms(started_at))
+        return _build_infeasible_response(
+            payload,
+            warnings,
+            _runtime_ms(started_at),
+            infeasibility_analysis=_build_lower_bounds_analysis(payload, lower_sum),
+        )
 
     if upper_sum + _TOL < intake:
         warnings.append(
             f"Upper bounds sum ({upper_sum:.4f}) is below intake target ({intake:.4f})."
         )
         warnings.append("Suggestion: increase one or more ingredient maximum inclusion constraints.")
-        return _build_infeasible_response(payload, warnings, _runtime_ms(started_at))
+        return _build_infeasible_response(
+            payload,
+            warnings,
+            _runtime_ms(started_at),
+            infeasibility_analysis=_build_upper_bounds_analysis(payload, upper_sum),
+        )
 
     A_ub: list[np.ndarray] = []
     b_ub: list[float] = []
@@ -82,7 +119,7 @@ def solve_optimize(payload: OptimizeRequest) -> OptimizeResponse:
 
     for constraint in payload.animalProfile.constraints:
         coefficients = np.array(
-            [item.nutrients.get(constraint.code, 0.0) for item in ingredients], dtype=float
+            [_safe_nutrient_value(item, constraint.code) for item in ingredients], dtype=float
         )
         min_required_abs = _to_absolute_requirement(constraint.min, constraint.unit, intake)
         max_required_abs = _to_absolute_requirement(constraint.max, constraint.unit, intake)
@@ -111,7 +148,13 @@ def solve_optimize(payload: OptimizeRequest) -> OptimizeResponse:
 
     if infeasibility_hints:
         warnings.extend(infeasibility_hints)
-        return _build_infeasible_response(payload, warnings, _runtime_ms(started_at), diagnostics)
+        return _build_infeasible_response(
+            payload,
+            warnings,
+            _runtime_ms(started_at),
+            diagnostics,
+            infeasibility_analysis=_build_constraint_conflict_analysis(payload, diagnostics),
+        )
 
     A_ub_array = np.vstack(A_ub) if A_ub else None
     b_ub_array = np.array(b_ub, dtype=float) if b_ub else None
@@ -132,7 +175,13 @@ def solve_optimize(payload: OptimizeRequest) -> OptimizeResponse:
     if not result.success or result.x is None:
         warnings.append(f"Solver status={result.status} message={result.message}")
         warnings.append("Suggestion: relax one or more nutrient constraints or ingredient bounds.")
-        return _build_infeasible_response(payload, warnings, runtime_ms, diagnostics)
+        return _build_infeasible_response(
+            payload,
+            warnings,
+            runtime_ms,
+            diagnostics,
+            infeasibility_analysis=_build_solver_failure_analysis(payload),
+        )
 
     x = result.x.astype(float)
     if np.any(x < -_TOL):
@@ -190,7 +239,7 @@ def _build_constraints_report(
 
     for constraint in constraints:
         coefficients = np.array(
-            [item.nutrients.get(constraint.code, 0.0) for item in ingredients], dtype=float
+            [_safe_nutrient_value(item, constraint.code) for item in ingredients], dtype=float
         )
         total_abs = float(np.dot(x, coefficients))
         actual_unit = _from_absolute_value(total_abs, constraint.unit, intake)
@@ -259,6 +308,7 @@ def _build_infeasible_response(
     warnings: list[str],
     runtime_ms: int,
     diagnostics: list[_ConstraintDiagnostics] | None = None,
+    infeasibility_analysis: InfeasibilityAnalysis | None = None,
 ) -> OptimizeResponse:
     if diagnostics:
         report: list[ConstraintReportItem] = []
@@ -295,6 +345,430 @@ def _build_infeasible_response(
         constraintsReport=report,
         solverMeta=SolverMeta(method="highs", runtimeMs=runtime_ms),
         warnings=warnings,
+        infeasibilityAnalysis=infeasibility_analysis,
+    )
+
+
+def _build_invalid_bounds_analysis(
+    payload: OptimizeRequest,
+    invalid_bounds: list[str],
+) -> InfeasibilityAnalysis:
+    invalid_ingredients = [item for item in payload.ingredients if item.name in invalid_bounds]
+    actions = []
+    for index, item in enumerate(invalid_ingredients[:3], start=1):
+        actions.append(
+            InfeasibilityPriorityAction(
+                priority=index,
+                title=f"Corregir limites de {item.name}",
+                reason="El minimo de inclusion es mayor que el maximo permitido.",
+                ingredientId=item.id,
+                ingredientName=item.name,
+                currentMinPct=round(float(item.boundsPct.min), 2),
+                currentMaxPct=round(float(item.boundsPct.max), 2),
+                suggestedMinPct=round(float(min(item.boundsPct.min, item.boundsPct.max)), 2),
+                suggestedMaxPct=round(float(max(item.boundsPct.min, item.boundsPct.max)), 2),
+            )
+        )
+
+    return InfeasibilityAnalysis(
+        reasonCode="UNKNOWN",
+        summary="Se detectaron ingredientes con limites invalidos (minimo mayor que maximo).",
+        priorityActions=actions
+        or [
+            InfeasibilityPriorityAction(
+                priority=1,
+                title="Revisar limites de inclusion",
+                reason="Hay limites inconsistente en uno o mas ingredientes.",
+            )
+        ],
+        alternatives=[
+            InfeasibilityAlternative(
+                title="Estandarizar validacion de limites",
+                summary="Asegura que cada ingrediente cumpla minimo <= maximo antes de correr el solver.",
+                tradeoff="Requiere revisar configuracion de ingredientes en catalogo.",
+            )
+        ],
+    )
+
+
+def _build_lower_bounds_analysis(payload: OptimizeRequest, lower_sum: float) -> InfeasibilityAnalysis:
+    intake = payload.animalProfile.intakeDmKgPerDay
+    excess_kg = max(0.0, lower_sum - intake)
+    excess_pct = (excess_kg / intake) * 100 if intake > 0 else 0
+    remaining_pct = excess_pct
+
+    sorted_by_min = sorted(payload.ingredients, key=lambda item: float(item.boundsPct.min), reverse=True)
+    actions: list[InfeasibilityPriorityAction] = []
+
+    for item in sorted_by_min:
+        current_min = float(item.boundsPct.min)
+        if current_min <= 0 or remaining_pct <= _TOL:
+            continue
+
+        reduce_pct = min(current_min, remaining_pct)
+        suggested_min = max(0.0, current_min - reduce_pct)
+        actions.append(
+            InfeasibilityPriorityAction(
+                priority=len(actions) + 1,
+                title=f"Reducir minimo de {item.name}",
+                reason=(
+                    f"Su minimo actual ({current_min:.2f}%) empuja la suma de minimos por arriba de 100% MS."
+                ),
+                ingredientId=item.id,
+                ingredientName=item.name,
+                currentMinPct=round(current_min, 2),
+                currentMaxPct=round(float(item.boundsPct.max), 2),
+                suggestedMinPct=round(suggested_min, 2),
+                deltaPct=round(-reduce_pct, 2),
+            )
+        )
+        remaining_pct -= reduce_pct
+        if len(actions) >= 4:
+            break
+
+    return InfeasibilityAnalysis(
+        reasonCode="LOWER_BOUNDS_SUM",
+        summary=(
+            f"La suma de minimos exigidos supera la meta de consumo en {excess_kg:.2f} kg MS/dia "
+            f"({excess_pct:.2f}% de la dieta)."
+        ),
+        priorityActions=actions
+        or [
+            InfeasibilityPriorityAction(
+                priority=1,
+                title="Bajar minimos de inclusion",
+                reason="La suma total de minimos excede el 100% de materia seca disponible.",
+            )
+        ],
+        alternatives=[
+            InfeasibilityAlternative(
+                title="Plan A: Ajuste conservador de minimos",
+                summary="Baja primero minimos de ingredientes con mayor porcentaje obligatorio.",
+                tradeoff="Puede cambiar la composicion base esperada por manejo.",
+            ),
+            InfeasibilityAlternative(
+                title="Plan B: Ventana temporal por etapa",
+                summary="Usa minimos mas flexibles en transicion y regresa limites en finalizacion.",
+                tradeoff="Requiere control operativo por fase.",
+            ),
+        ],
+    )
+
+
+def _build_upper_bounds_analysis(payload: OptimizeRequest, upper_sum: float) -> InfeasibilityAnalysis:
+    intake = payload.animalProfile.intakeDmKgPerDay
+    missing_kg = max(0.0, intake - upper_sum)
+    missing_pct = (missing_kg / intake) * 100 if intake > 0 else 0
+    remaining_pct = missing_pct
+
+    candidates = sorted(
+        payload.ingredients,
+        key=lambda item: (float(item.priceMxnPerKgAsFed), -float(item.boundsPct.max)),
+    )
+    actions: list[InfeasibilityPriorityAction] = []
+
+    for item in candidates:
+        current_max = float(item.boundsPct.max)
+        room = max(0.0, 100.0 - current_max)
+        if room <= _TOL or remaining_pct <= _TOL:
+            continue
+
+        increase_pct = min(room, remaining_pct)
+        suggested_max = min(100.0, current_max + increase_pct)
+        actions.append(
+            InfeasibilityPriorityAction(
+                priority=len(actions) + 1,
+                title=f"Subir maximo de {item.name}",
+                reason=(
+                    f"El maximo actual ({current_max:.2f}%) limita la capacidad total de la mezcla."
+                ),
+                ingredientId=item.id,
+                ingredientName=item.name,
+                currentMaxPct=round(current_max, 2),
+                currentMinPct=round(float(item.boundsPct.min), 2),
+                suggestedMaxPct=round(suggested_max, 2),
+                deltaPct=round(increase_pct, 2),
+            )
+        )
+        remaining_pct -= increase_pct
+        if len(actions) >= 4:
+            break
+
+    return InfeasibilityAnalysis(
+        reasonCode="UPPER_BOUNDS_SUM",
+        summary=(
+            f"La suma de maximos permitidos queda corta por {missing_kg:.2f} kg MS/dia "
+            f"({missing_pct:.2f}% de la dieta)."
+        ),
+        priorityActions=actions
+        or [
+            InfeasibilityPriorityAction(
+                priority=1,
+                title="Aumentar maximos de inclusion",
+                reason="La capacidad total por maximos no llega al 100% de materia seca objetivo.",
+            )
+        ],
+        alternatives=[
+            InfeasibilityAlternative(
+                title="Plan A: Abrir maximos en ingredientes base",
+                summary="Incrementa maximos en ingredientes de mayor disponibilidad y costo razonable.",
+                tradeoff="Puede aumentar riesgo de desbalance si no se revisan nutrientes.",
+            ),
+            InfeasibilityAlternative(
+                title="Plan B: Activar ingrediente complementario",
+                summary="Habilita un ingrediente adicional con maximo operativo para cerrar el faltante.",
+                tradeoff="Requiere precio vigente y validacion de inventario.",
+            ),
+        ],
+    )
+
+
+def _build_constraint_conflict_analysis(
+    payload: OptimizeRequest,
+    diagnostics: list[_ConstraintDiagnostics],
+) -> InfeasibilityAnalysis:
+    intake = payload.animalProfile.intakeDmKgPerDay
+    constraints = {item.code: item for item in payload.animalProfile.constraints}
+    actions: list[InfeasibilityPriorityAction] = []
+    summary = "Existe al menos un conflicto entre restricciones nutricionales y limites de ingredientes."
+
+    for diagnostic in diagnostics:
+        constraint = constraints.get(diagnostic.code)
+        if constraint is None:
+            continue
+
+        if (
+            diagnostic.min_required_abs is not None
+            and diagnostic.min_required_abs > diagnostic.max_possible_abs + _TOL
+        ):
+            required = _from_absolute_value(diagnostic.min_required_abs, constraint.unit, intake)
+            achievable = _from_absolute_value(diagnostic.max_possible_abs, constraint.unit, intake)
+            summary = (
+                f"La restriccion {diagnostic.code} pide un minimo mayor al maximo alcanzable "
+                f"({required:.4f} > {achievable:.4f})."
+            )
+            actions.append(
+                InfeasibilityPriorityAction(
+                    priority=1,
+                    title=f"Relajar minimo de {diagnostic.code}",
+                    reason=f"El minimo solicitado ({required:.4f}) no se puede alcanzar con los limites actuales.",
+                    constraintCode=diagnostic.code,
+                )
+            )
+            actions.extend(
+                _ingredient_actions_for_constraint(
+                    payload=payload,
+                    constraint_code=diagnostic.code,
+                    direction="RAISE_NUTRIENT",
+                    start_priority=2,
+                )
+            )
+            if len(actions) <= 1:
+                actions.extend(
+                    _fallback_bound_actions(
+                        payload=payload,
+                        start_priority=2,
+                    )
+                )
+            break
+
+        if (
+            diagnostic.max_required_abs is not None
+            and diagnostic.max_required_abs + _TOL < diagnostic.min_possible_abs
+        ):
+            required = _from_absolute_value(diagnostic.max_required_abs, constraint.unit, intake)
+            achievable = _from_absolute_value(diagnostic.min_possible_abs, constraint.unit, intake)
+            summary = (
+                f"La restriccion {diagnostic.code} impone un maximo por debajo del minimo alcanzable "
+                f"({required:.4f} < {achievable:.4f})."
+            )
+            actions.append(
+                InfeasibilityPriorityAction(
+                    priority=1,
+                    title=f"Relajar maximo de {diagnostic.code}",
+                    reason=f"El maximo solicitado ({required:.4f}) no es alcanzable con los limites actuales.",
+                    constraintCode=diagnostic.code,
+                )
+            )
+            actions.extend(
+                _ingredient_actions_for_constraint(
+                    payload=payload,
+                    constraint_code=diagnostic.code,
+                    direction="LOWER_NUTRIENT",
+                    start_priority=2,
+                )
+            )
+            if len(actions) <= 1:
+                actions.extend(
+                    _fallback_bound_actions(
+                        payload=payload,
+                        start_priority=2,
+                    )
+                )
+            break
+
+    if not actions:
+        actions.append(
+            InfeasibilityPriorityAction(
+                priority=1,
+                title="Revisar restricciones nutricionales",
+                reason="Hay conflicto entre metas nutricionales y la ventana operativa de ingredientes.",
+            )
+        )
+
+    return InfeasibilityAnalysis(
+        reasonCode="CONSTRAINT_CONFLICT",
+        summary=summary,
+        priorityActions=actions,
+        alternatives=[
+            InfeasibilityAlternative(
+                title="Plan A: Ajustar temporalmente la restriccion en conflicto",
+                summary="Relaja el limite conflictivo en un rango controlado y vuelve a correr el solver.",
+                tradeoff="Puede sacrificar precision nutricional en el corto plazo.",
+            ),
+            InfeasibilityAlternative(
+                title="Plan B: Abrir limites de ingredientes clave",
+                summary="Aumenta margen en ingredientes que aportan el nutriente en conflicto.",
+                tradeoff="Requiere control de riesgo digestivo y costo.",
+            ),
+        ],
+    )
+
+
+def _ingredient_actions_for_constraint(
+    *,
+    payload: OptimizeRequest,
+    constraint_code: str,
+    direction: str,
+    start_priority: int,
+) -> list[InfeasibilityPriorityAction]:
+    nutrient_rank = sorted(
+        payload.ingredients,
+        key=lambda item: _safe_nutrient_value(item, constraint_code),
+        reverse=True,
+    )
+    actions: list[InfeasibilityPriorityAction] = []
+
+    if direction == "RAISE_NUTRIENT":
+        for item in nutrient_rank:
+            nutrient_value = _safe_nutrient_value(item, constraint_code)
+            if nutrient_value <= _TOL:
+                continue
+            if float(item.boundsPct.max) >= 99.9:
+                continue
+            suggested_max = min(100.0, float(item.boundsPct.max) + 3.0)
+            nutrient_label = _nutrient_label(constraint_code)
+            nutrient_value_text = _format_nutrient_value(constraint_code, nutrient_value)
+            current_max = float(item.boundsPct.max)
+            actions.append(
+                InfeasibilityPriorityAction(
+                    priority=start_priority + len(actions),
+                    title=f"Subir maximo de {item.name}",
+                    reason=(
+                        f"{item.name} aporta {nutrient_value_text} de {nutrient_label}; "
+                        f"subir su maximo de {current_max:.2f}% a {suggested_max:.2f}% "
+                        f"ayuda a cumplir el minimo de {nutrient_label}."
+                    ),
+                    ingredientId=item.id,
+                    ingredientName=item.name,
+                    constraintCode=constraint_code,
+                    currentMinPct=round(float(item.boundsPct.min), 2),
+                    currentMaxPct=round(current_max, 2),
+                    suggestedMaxPct=round(suggested_max, 2),
+                    deltaPct=round(suggested_max - current_max, 2),
+                )
+            )
+            if len(actions) >= 3:
+                break
+        return actions
+
+    for item in nutrient_rank:
+        nutrient_value = _safe_nutrient_value(item, constraint_code)
+        if nutrient_value <= _TOL:
+            continue
+        if float(item.boundsPct.min) <= _TOL:
+            continue
+        current_min = float(item.boundsPct.min)
+        suggested_min = max(0.0, current_min - 3.0)
+        nutrient_label = _nutrient_label(constraint_code)
+        nutrient_value_text = _format_nutrient_value(constraint_code, nutrient_value)
+        actions.append(
+            InfeasibilityPriorityAction(
+                priority=start_priority + len(actions),
+                title=f"Bajar minimo de {item.name}",
+                reason=(
+                    f"{item.name} aporta {nutrient_value_text} de {nutrient_label}; "
+                    f"bajar su minimo de {current_min:.2f}% a {suggested_min:.2f}% "
+                    f"reduce el riesgo de exceso de {nutrient_label}."
+                ),
+                ingredientId=item.id,
+                ingredientName=item.name,
+                constraintCode=constraint_code,
+                currentMinPct=round(current_min, 2),
+                currentMaxPct=round(float(item.boundsPct.max), 2),
+                suggestedMinPct=round(suggested_min, 2),
+                deltaPct=round(suggested_min - current_min, 2),
+            )
+        )
+        if len(actions) >= 3:
+            break
+
+    return actions
+
+
+def _fallback_bound_actions(*, payload: OptimizeRequest, start_priority: int) -> list[InfeasibilityPriorityAction]:
+    ranked = sorted(payload.ingredients, key=lambda item: float(item.boundsPct.min), reverse=True)
+    actions: list[InfeasibilityPriorityAction] = []
+    for item in ranked:
+        current_min = float(item.boundsPct.min)
+        if current_min <= _TOL:
+            continue
+        suggested_min = max(0.0, current_min - 2.0)
+        actions.append(
+            InfeasibilityPriorityAction(
+                priority=start_priority + len(actions),
+                title=f"Bajar minimo de {item.name}",
+                reason=(
+                    f"Como accion de recuperacion, reduce su minimo de {current_min:.2f}% a {suggested_min:.2f}% "
+                    "para abrir espacio de formulacion."
+                ),
+                ingredientId=item.id,
+                ingredientName=item.name,
+                currentMinPct=round(current_min, 2),
+                currentMaxPct=round(float(item.boundsPct.max), 2),
+                suggestedMinPct=round(suggested_min, 2),
+                deltaPct=round(suggested_min - current_min, 2),
+            )
+        )
+        if len(actions) >= 3:
+            break
+
+    return actions
+
+
+def _build_solver_failure_analysis(payload: OptimizeRequest) -> InfeasibilityAnalysis:
+    return InfeasibilityAnalysis(
+        reasonCode="SOLVER_FAILURE",
+        summary="El solver no pudo cerrar una solucion factible con la configuracion actual.",
+        priorityActions=[
+            InfeasibilityPriorityAction(
+                priority=1,
+                title="Reducir rigidez de limites",
+                reason="Los limites de ingredientes o nutrientes pueden estar demasiado cerrados.",
+            ),
+            InfeasibilityPriorityAction(
+                priority=2,
+                title="Verificar precios y materia seca",
+                reason="Datos extremos de costo o humedad pueden distorsionar la formulacion.",
+            ),
+        ],
+        alternatives=[
+            InfeasibilityAlternative(
+                title="Plan alterno: correr escenario conservador",
+                summary="Baja minimos estrictos y amplia maximos en ingredientes base para recuperar factibilidad.",
+                tradeoff="Resultado menos restrictivo pero util para retomar operacion.",
+            )
+        ],
     )
 
 
@@ -373,3 +847,47 @@ def _from_absolute_value(total_abs: float, unit: str, intake: float) -> float:
 
 def _runtime_ms(started_at: float) -> int:
     return max(0, int((time.perf_counter() - started_at) * 1000))
+
+
+def _safe_nutrient_value(item, code: str) -> float:
+    raw = item.nutrients.get(code, 0.0)
+    try:
+        value = float(raw)
+    except (TypeError, ValueError):
+        return 0.0
+    if not np.isfinite(value):
+        return 0.0
+    return value
+
+
+def _collect_invalid_nutrient_entries(ingredients) -> list[str]:
+    invalid: list[str] = []
+    for item in ingredients:
+        for code, raw in item.nutrients.items():
+            try:
+                value = float(raw)
+            except (TypeError, ValueError):
+                invalid.append(f"{item.name}:{code}")
+                continue
+            if not np.isfinite(value):
+                invalid.append(f"{item.name}:{code}")
+    return invalid
+
+
+def _nutrient_label(code: str) -> str:
+    labels = {
+        "NDF": "fibra",
+        "CP": "proteina",
+        "ME_MCAL_KGDM": "energia util",
+        "Ca": "calcio",
+        "P": "fosforo",
+    }
+    return labels.get(code, code)
+
+
+def _format_nutrient_value(code: str, value: float) -> str:
+    if code == "ME_MCAL_KGDM":
+        return f"{value:.2f} Mcal/kg MS"
+    if code in ("NDF", "CP", "Ca", "P"):
+        return f"{value * 100:.2f}%"
+    return f"{value:.4f}"

@@ -17,6 +17,7 @@ export const constraintLabels: Record<string, string> = {
 
 export const safetyFlagLabels: Record<string, string> = {
   UNSAFE_REQUEST_BLOCKED: 'Se bloqueo una sugerencia numerica para proteger la seguridad.',
+  OUT_OF_BOUNDS_REQUEST: 'El cambio solicitado rebasa los limites permitidos para ese ingrediente.',
   NEEDS_MORE_INPUT: 'Faltan datos para responder con precision.',
   NEEDS_RAG_INDEX: 'Aun no hay suficientes documentos para sustentar la respuesta.',
 };

@@ -65,6 +65,40 @@ export interface ConstraintReportItem {
   slack: number;
 }
 
+export type InfeasibilityReasonCode =
+  | 'LOWER_BOUNDS_SUM'
+  | 'UPPER_BOUNDS_SUM'
+  | 'CONSTRAINT_CONFLICT'
+  | 'SOLVER_FAILURE'
+  | 'UNKNOWN';
+
+export interface InfeasibilityPriorityAction {
+  priority: number;
+  title: string;
+  reason: string;
+  ingredientId?: string;
+  ingredientName?: string;
+  constraintCode?: string;
+  currentMinPct?: number;
+  currentMaxPct?: number;
+  suggestedMinPct?: number;
+  suggestedMaxPct?: number;
+  deltaPct?: number;
+}
+
+export interface InfeasibilityAlternative {
+  title: string;
+  summary: string;
+  tradeoff?: string;
+}
+
+export interface InfeasibilityAnalysis {
+  reasonCode: InfeasibilityReasonCode;
+  summary: string;
+  priorityActions: InfeasibilityPriorityAction[];
+  alternatives: InfeasibilityAlternative[];
+}
+
 export interface WeeklyDietDay {
   dayNumber: number;
   mix: MixItem[];
@@ -116,6 +150,7 @@ export interface OptimizeResponse {
     runtimeMs: number;
   };
   warnings: string[];
+  infeasibilityAnalysis?: InfeasibilityAnalysis;
   weeklyPlan?: WeeklyDietPlan;
 }
 
@@ -183,6 +218,8 @@ export interface AgentContext {
   constraintsReport?: ConstraintReportItem[];
   totalCostMxnPerHeadDay?: number;
   ingredients?: IngredientInput[];
+  solverWarnings?: string[];
+  infeasibilityAnalysis?: InfeasibilityAnalysis;
   batchContext?: BatchContext;
   projection?: ProjectionResponse;
   salePriceMxnPerKg?: number;
@@ -264,6 +301,16 @@ export interface RagEvaluateResponse {
     leakedNumeric: boolean;
     topSourceTitle: string | null;
   }>;
+}
+
+export interface RagDocumentInput {
+  title: string;
+  content: string;
+  snippet?: string;
+  sourceType?: string;
+  region?: string;
+  topic?: string;
+  metadata?: Record<string, string | number | boolean | null>;
 }
 
 export interface AgentSession {

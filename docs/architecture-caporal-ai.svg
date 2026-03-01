@@ -1,0 +1,208 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1260" viewBox="0 0 1800 1260">
+  <defs>
+    <style>
+      .bg { fill: #0b1117; }
+      .panel { fill: #131b23; stroke: #2a3a4a; stroke-width: 2; rx: 16; ry: 16; }
+      .panel-soft { fill: #101821; stroke: #24435d; stroke-width: 1.5; rx: 12; ry: 12; }
+      .title { fill: #ecf3fb; font-size: 28px; font-family: Arial, sans-serif; font-weight: 700; }
+      .subtitle { fill: #9cb0c5; font-size: 14px; font-family: Arial, sans-serif; }
+      .h2 { fill: #ecf3fb; font-size: 20px; font-family: Arial, sans-serif; font-weight: 700; }
+      .label { fill: #d9e4ef; font-size: 15px; font-family: Arial, sans-serif; }
+      .small { fill: #9cb0c5; font-size: 12px; font-family: Arial, sans-serif; }
+      .accent-green { fill: #4ce0b3; }
+      .accent-amber { fill: #f4b45f; }
+      .accent-blue { fill: #65b6ff; }
+      .legend-text { fill: #d9e4ef; font-size: 12px; font-family: Arial, sans-serif; }
+      .arrow-main { stroke: #4ce0b3; stroke-width: 2.5; fill: none; marker-end: url(#arrowGreen); }
+      .arrow-data { stroke: #65b6ff; stroke-width: 2.2; fill: none; marker-end: url(#arrowBlue); }
+      .arrow-ai { stroke: #f4b45f; stroke-width: 2.2; fill: none; marker-end: url(#arrowAmber); }
+      .dash { stroke-dasharray: 7 6; }
+    </style>
+    <marker id="arrowGreen" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#4ce0b3"/>
+    </marker>
+    <marker id="arrowBlue" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#65b6ff"/>
+    </marker>
+    <marker id="arrowAmber" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#f4b45f"/>
+    </marker>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="1800" height="1260"/>
+
+  <text class="title" x="42" y="52">Caporal AI - End-to-End Architecture (Current Implementation)</text>
+  <text class="subtitle" x="42" y="78">React + NestJS + FastAPI + Postgres/pgvector + OpenAI (optional) + Docker/Nginx</text>
+
+  <!-- Edge / Entry -->
+  <rect class="panel" x="40" y="110" width="330" height="130"/>
+  <text class="h2" x="62" y="145">User + Browser</text>
+  <text class="label" x="62" y="175">Producer / operator UI usage</text>
+  <text class="small" x="62" y="198">Updates prices, generates diets, asks assistant</text>
+
+  <rect class="panel" x="430" y="110" width="320" height="130"/>
+  <text class="h2" x="452" y="145">Nginx Gateway</text>
+  <text class="label" x="452" y="175">Routes:</text>
+  <text class="small" x="452" y="198">/ -&gt; web  |  /api -&gt; api  |  /compute -&gt; compute</text>
+
+  <!-- Shared contracts -->
+  <rect class="panel" x="810" y="110" width="300" height="130"/>
+  <text class="h2" x="832" y="145">Shared Contracts</text>
+  <text class="label" x="832" y="175">packages/contracts</text>
+  <text class="small" x="832" y="198">TS interfaces + JSON schemas</text>
+
+  <!-- Web -->
+  <rect class="panel" x="40" y="290" width="500" height="390"/>
+  <text class="h2" x="62" y="325">Web App (React + MUI + RTK Query)</text>
+  <rect class="panel-soft" x="62" y="350" width="456" height="70"/>
+  <text class="label" x="78" y="378">Ingredients Screen</text>
+  <text class="small" x="78" y="400">Edit nutrients, bounds, current price per ingredient</text>
+
+  <rect class="panel-soft" x="62" y="430" width="456" height="70"/>
+  <text class="label" x="78" y="458">Batch Workflow Screen</text>
+  <text class="small" x="78" y="480">Create batch, weigh-ins, weekly plan, projection, sell signal</text>
+
+  <rect class="panel-soft" x="62" y="510" width="456" height="70"/>
+  <text class="label" x="78" y="538">Generate Diet Screen</text>
+  <text class="small" x="78" y="560">Simple run + mix visualization + hard constraints status</text>
+
+  <rect class="panel-soft" x="62" y="590" width="456" height="70"/>
+  <text class="label" x="78" y="618">Assistant Screen (Agentic)</text>
+  <text class="small" x="78" y="640">Sessions, mode switching, citations, tool trace, simulations</text>
+
+  <!-- API -->
+  <rect class="panel" x="600" y="290" width="560" height="500"/>
+  <text class="h2" x="622" y="325">API (NestJS)</text>
+  <text class="small" x="622" y="347">Global validation, CORS, correlation-id middleware, rate limiting</text>
+
+  <rect class="panel-soft" x="622" y="365" width="250" height="95"/>
+  <text class="label" x="638" y="392">Ingredients Module</text>
+  <text class="small" x="638" y="414">/api/ingredients</text>
+  <text class="small" x="638" y="434">price upsert (same day/location) + history list</text>
+
+  <rect class="panel-soft" x="890" y="365" width="250" height="95"/>
+  <text class="label" x="906" y="392">Diets Module</text>
+  <text class="small" x="906" y="414">/api/diets/generate</text>
+  <text class="small" x="906" y="434">Build OptimizeRequest + persist DietRun snapshots</text>
+
+  <rect class="panel-soft" x="622" y="470" width="250" height="140"/>
+  <text class="label" x="638" y="497">Batches Module</text>
+  <text class="small" x="638" y="519">/api/batches, weigh-ins, health-events</text>
+  <text class="small" x="638" y="539">/diets/generate-weekly</text>
+  <text class="small" x="638" y="559">/projections, /sell-signal</text>
+  <text class="small" x="638" y="579">Weekly plan + projection persistence</text>
+
+  <rect class="panel-soft" x="890" y="470" width="250" height="140"/>
+  <text class="label" x="906" y="497">Assistant Module</text>
+  <text class="small" x="906" y="519">Legacy: /api/assistant/ask</text>
+  <text class="small" x="906" y="539">Agentic: sessions/messages/simulate/trace</text>
+  <text class="small" x="906" y="559">Persist messages + tool calls + safety flags</text>
+  <text class="small" x="906" y="579">Builds agent context from latest run/projection</text>
+
+  <rect class="panel-soft" x="622" y="620" width="518" height="150"/>
+  <text class="label" x="638" y="647">Compute Adapter (FastApiComputeHttpAdapter)</text>
+  <text class="small" x="638" y="669">Retries + timeout + simple circuit breaker</text>
+  <text class="small" x="638" y="689">Calls: /v1/optimize, /v1/ask, /v1/project, /v1/agent/respond</text>
+  <text class="small" x="638" y="709">Logs request/response with correlation id</text>
+
+  <!-- Compute -->
+  <rect class="panel" x="1220" y="290" width="540" height="500"/>
+  <text class="h2" x="1242" y="325">Compute Service (FastAPI + Python)</text>
+  <text class="small" x="1242" y="347">Pydantic contracts, solver, rag, agent, projection</text>
+
+  <rect class="panel-soft" x="1242" y="365" width="240" height="120"/>
+  <text class="label" x="1258" y="392">Optimization</text>
+  <text class="small" x="1258" y="414">POST /v1/optimize</text>
+  <text class="small" x="1258" y="434">SciPy linprog(method="highs")</text>
+  <text class="small" x="1258" y="454">Hard constraints + infeasibility hints</text>
+
+  <rect class="panel-soft" x="1498" y="365" width="240" height="120"/>
+  <text class="label" x="1514" y="392">Projection</text>
+  <text class="small" x="1514" y="414">POST /v1/project</text>
+  <text class="small" x="1514" y="434">XGBoost regressor or linear fallback</text>
+  <text class="small" x="1514" y="454">Cost/margin curve + sell signal</text>
+
+  <rect class="panel-soft" x="1242" y="495" width="240" height="120"/>
+  <text class="label" x="1258" y="522">RAG</text>
+  <text class="small" x="1258" y="544">POST /v1/ask, /v1/rag/retrieve</text>
+  <text class="small" x="1258" y="564">Chunking + vector+lexical rerank</text>
+  <text class="small" x="1258" y="584">Citations + guardrails</text>
+
+  <rect class="panel-soft" x="1498" y="495" width="240" height="120"/>
+  <text class="label" x="1514" y="522">Agentic Orchestrator</text>
+  <text class="small" x="1514" y="544">POST /v1/agent/respond</text>
+  <text class="small" x="1514" y="564">Modes: WHY / WHAT_IF / NEXT_BEST_ACTION</text>
+  <text class="small" x="1514" y="584">Tool calls + simulation diff + confidence</text>
+
+  <rect class="panel-soft" x="1242" y="625" width="496" height="145"/>
+  <text class="label" x="1258" y="652">RAG Storage + Evaluation</text>
+  <text class="small" x="1258" y="674">Tables: rag_documents, rag_sources, rag_chunks, rag_eval_runs</text>
+  <text class="small" x="1258" y="694">Seed corpus loaded at startup if less than 20 docs</text>
+  <text class="small" x="1258" y="714">24 seeded technical notes (pollinaza, fiber, urea, Ca:P, etc.)</text>
+  <text class="small" x="1258" y="734">POST /v1/rag/documents/upsert to ingest external docs</text>
+
+  <!-- Postgres -->
+  <rect class="panel" x="420" y="830" width="1060" height="230"/>
+  <text class="h2" x="442" y="865">Postgres + pgvector</text>
+  <text class="small" x="442" y="887">Single source of truth for domain, audit snapshots, RAG vectors and evaluation runs</text>
+
+  <rect class="panel-soft" x="442" y="905" width="500" height="130"/>
+  <text class="label" x="458" y="932">Operational Domain Tables</text>
+  <text class="small" x="458" y="954">ingredients, ingredient_prices, animal_profiles, diet_runs</text>
+  <text class="small" x="458" y="974">batches, batch_weigh_ins, batch_health_events, batch_projections</text>
+  <text class="small" x="458" y="994">assistant_sessions, assistant_messages, assistant_tool_calls</text>
+  <text class="small" x="458" y="1014">rag_interactions</text>
+
+  <rect class="panel-soft" x="964" y="905" width="494" height="130"/>
+  <text class="label" x="980" y="932">RAG / Vector Tables</text>
+  <text class="small" x="980" y="954">rag_documents (vector64), rag_sources, rag_chunks (vector64)</text>
+  <text class="small" x="980" y="974">rag_eval_runs (groundedness/citation metrics)</text>
+  <text class="small" x="980" y="994">ivfflat indexes for embedding search</text>
+
+  <!-- External -->
+  <rect class="panel" x="1510" y="110" width="250" height="120"/>
+  <text class="h2" x="1532" y="145">OpenAI API</text>
+  <text class="small" x="1532" y="168">Optional response polishing</text>
+  <text class="small" x="1532" y="188">Used only if OPENAI_API_KEY is set</text>
+
+  <!-- Flow arrows -->
+  <path class="arrow-main" d="M370 175 L430 175"/>
+  <text class="small" x="382" y="167">HTTP</text>
+
+  <path class="arrow-main" d="M750 175 L810 175"/>
+  <text class="small" x="764" y="167">types</text>
+
+  <path class="arrow-main" d="M590 240 L290 290"/>
+  <text class="small" x="430" y="262">/ -&gt; web</text>
+
+  <path class="arrow-main" d="M640 240 L850 290"/>
+  <text class="small" x="714" y="262">/api</text>
+
+  <path class="arrow-main dash" d="M1110 175 L1510 170"/>
+  <text class="small" x="1268" y="160">contracts alignment</text>
+
+  <path class="arrow-main" d="M1110 640 L1220 640"/>
+  <text class="small" x="1134" y="629">compute HTTP</text>
+
+  <path class="arrow-data" d="M820 790 L820 830"/>
+  <text class="small" x="834" y="814">domain writes/reads</text>
+
+  <path class="arrow-data" d="M1740 770 L1740 820 L1480 860"/>
+  <text class="small" x="1554" y="836">rag vectors + eval</text>
+
+  <path class="arrow-ai dash" d="M1640 290 L1640 230"/>
+  <text class="small" x="1650" y="260">optional LLM rewrite</text>
+
+  <path class="arrow-main dash" d="M1740 555 L1760 555 L1760 430 L1488 430"/>
+
+  <!-- Legend -->
+  <rect class="panel-soft" x="40" y="1090" width="1720" height="140"/>
+  <text class="label" x="56" y="1118">Legend</text>
+  <line x1="56" y1="1144" x2="176" y2="1144" class="arrow-main"/>
+  <text class="legend-text" x="196" y="1148">Main control/request flow</text>
+  <line x1="56" y1="1172" x2="176" y2="1172" class="arrow-data"/>
+  <text class="legend-text" x="196" y="1176">Data persistence/read flow</text>
+  <line x1="56" y1="1200" x2="176" y2="1200" class="arrow-ai dash"/>
+  <text class="legend-text" x="196" y="1204">Optional/conditional integration</text>
+  <text class="small" x="920" y="1204">Notes: Price history is preserved. Operational selection uses latest created record.</text>
+</svg>

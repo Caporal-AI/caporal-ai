@@ -1,6 +1,7 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { sanitizeNutrientsMap } from '../common/nutrients.util';
 import { CreateIngredientDto } from './dto/create-ingredient.dto';
 import { CreateIngredientPriceDto } from './dto/create-ingredient-price.dto';
 import { UpdateIngredientDto } from './dto/update-ingredient.dto';
@@ -18,7 +19,10 @@ export class IngredientsService {
 
   create(dto: CreateIngredientDto): Promise<Ingredient> {
     this.validateBounds(dto.minInclusionPct, dto.maxInclusionPct);
-    const ingredient = this.ingredientRepository.create(dto);
+    const ingredient = this.ingredientRepository.create({
+      ...dto,
+      nutrientsJson: sanitizeNutrientsMap(dto.nutrientsJson),
+    });
     return this.ingredientRepository.save(ingredient);
   }
 
@@ -41,7 +45,16 @@ export class IngredientsService {
     const nextMin = dto.minInclusionPct ?? ingredient.minInclusionPct;
     const nextMax = dto.maxInclusionPct ?? ingredient.maxInclusionPct;
     this.validateBounds(nextMin, nextMax);
-    Object.assign(ingredient, dto);
+    const nextNutrients = dto.nutrientsJson
+      ? {
+          ...(ingredient.nutrientsJson ?? {}),
+          ...sanitizeNutrientsMap(dto.nutrientsJson),
+        }
+      : ingredient.nutrientsJson;
+    Object.assign(ingredient, {
+      ...dto,
+      nutrientsJson: nextNutrients,
+    });
     return this.ingredientRepository.save(ingredient);
   }
 

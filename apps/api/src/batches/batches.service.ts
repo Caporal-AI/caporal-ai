@@ -25,6 +25,8 @@ import { BatchHealthEvent, HealthSeverity } from './batch-health-event.entity';
 import { BatchProjection } from './batch-projection.entity';
 import { BatchWeighIn } from './batch-weigh-in.entity';
 import { Batch, BatchStatus } from './batch.entity';
+import { ensureInfeasibilityAnalysis } from '../common/infeasibility-analysis.util';
+import { enrichNutrientsFromSeedFallback, sanitizeNutrientsMap } from '../common/nutrients.util';
 import { CreateBatchHealthEventDto } from './dto/create-batch-health-event.dto';
 import { CreateBatchDto } from './dto/create-batch.dto';
 import { CreateBatchWeighInDto } from './dto/create-batch-weigh-in.dto';
@@ -164,14 +166,15 @@ export class BatchesService {
       });
     }
 
-    const weeklyPlan = this.buildWeeklyPlan(optimizeResponse, batch.headCount);
+    const normalizedOptimizeResponse = ensureInfeasibilityAnalysis(optimizeRequest, optimizeResponse);
+    const weeklyPlan = this.buildWeeklyPlan(normalizedOptimizeResponse, batch.headCount);
     let projection: ProjectionResponse | null = null;
 
-    if (optimizeResponse.feasible) {
+    if (normalizedOptimizeResponse.feasible) {
       try {
         const projectionRequest = await this.buildProjectionRequest(
           batch,
-          optimizeResponse,
+          normalizedOptimizeResponse,
           dto.horizonDays ?? 56,
           dto.salePriceMxnPerKg,
           dto.purchasePriceMxnPerKg,
@@ -187,14 +190,14 @@ export class BatchesService {
     }
 
     const solutionSnapshot: SolverSolutionSnapshot = {
-      ...optimizeResponse,
+      ...normalizedOptimizeResponse,
       weeklyPlan,
       projection: projection ?? undefined,
       sellSignal: projection?.sellSignal,
     };
 
     dietRun.solutionSnapshotJson = solutionSnapshot as unknown as Record<string, unknown>;
-    dietRun.status = optimizeResponse.feasible ? DietRunStatus.SUCCESS : DietRunStatus.INFEASIBLE;
+    dietRun.status = normalizedOptimizeResponse.feasible ? DietRunStatus.SUCCESS : DietRunStatus.INFEASIBLE;
 
     const savedDietRun = await this.dietRunRepository.save(dietRun);
 
@@ -208,9 +211,9 @@ export class BatchesService {
       await this.projectionRepository.save(projectionEntity);
     }
 
-    const hardViolations = optimizeResponse.constraintsReport.filter((item) => !item.met).length;
+    const hardViolations = normalizedOptimizeResponse.constraintsReport.filter((item) => !item.met).length;
     this.metricsService.recordDietRun(
-      optimizeResponse.feasible,
+      normalizedOptimizeResponse.feasible,
       hardViolations,
       Date.now() - startedAt,
       Date.now() - computeStartedAt,
@@ -333,7 +336,10 @@ export class BatchesService {
         name: ingredient.name,
         priceMxnPerKgAsFed: latestPrice.priceMxnPerKgAsFed,
         dryMatterPct: ingredient.dryMatterPct,
-        nutrients: ingredient.nutrientsJson,
+        nutrients: enrichNutrientsFromSeedFallback(
+          ingredient.name,
+          sanitizeNutrientsMap(ingredient.nutrientsJson as Record<string, unknown>),
+        ),
         boundsPct: {
           min: ingredient.minInclusionPct,
           max: ingredient.maxInclusionPct,
@@ -509,20 +515,22 @@ export class BatchesService {
 
   private normalizeSellSignalReason(reason: string): string {
     const normalized = reason.trim();
-    const map: Record<string, string> = {
-      'Projected margin is still stable through the selected horizon.':
-        'El margen proyectado se mantiene estable durante el horizonte seleccionado.',
-      'Projected margin peaks before the horizon; consider selling near recommended day.':
-        'El margen proyectado alcanza su punto maximo antes del horizonte; considera vender cerca del dia recomendado.',
-      'Projected margin peaks before the selected horizon; consider selling near recommended day.':
-        'El margen proyectado alcanza su punto maximo antes del horizonte; considera vender cerca del dia recomendado.',
-      'Projection indicates margin starts dropping today; consider selling as soon as possible.':
-        'La proyeccion indica que el margen empieza a caer desde hoy; conviene vender hoy o lo antes posible.',
-      'No sufficient data to generate a reliable projection.':
-        'No hay datos suficientes para generar una proyeccion confiable.',
-    };
+    const lower = normalized.toLowerCase();
 
-    return map[normalized] ?? normalized;
+    if (lower.includes('projected margin is still stable')) {
+      return 'El margen proyectado se mantiene estable durante el horizonte seleccionado.';
+    }
+    if (lower.includes('projected margin peaks before')) {
+      return 'El margen proyectado alcanza su punto maximo antes del horizonte; considera vender cerca del dia recomendado.';
+    }
+    if (lower.includes('margin starts dropping today')) {
+      return 'La proyeccion indica que el margen empieza a caer desde hoy; conviene vender hoy o lo antes posible.';
+    }
+    if (lower.includes('no sufficient data to generate a reliable projection')) {
+      return 'No hay datos suficientes para generar una proyeccion confiable.';
+    }
+
+    return normalized;
   }
 
   private findLatestPrice(ingredientId: string): Promise<IngredientPrice | null> {

@@ -124,3 +124,14 @@ docker compose -f infra/docker-compose.yml exec -T api npm test -- --runInBand
 docker compose -f infra/docker-compose.yml exec -T api npm run build
 docker compose -f infra/docker-compose.yml exec -T web npm run build
 ```
+
+## Documentacion recomendada
+
+1. `docs/USER_GUIDE.md`: guia operativa rapida para uso diario.
+2. `docs/CODEBASE_GUIDE_45M.md`: recorrido tecnico para entender arquitectura y codigo.
+3. `docs/HANDS_ON_VALIDATION_20M.md`: validacion manual reproducible de extremo a extremo.
+4. `docs/RAG_INGESTION_PACKAGE.md`: paquete de ingesta y benchmark RAG para capa IA.
+5. `docs/TRACEABILITY_MATRIX.md`: matriz objetivo -> feature -> endpoint -> evidencia.
+6. `docs/ACCEPTANCE_CRITERIA.md`: criterios funcionales, tecnicos y UX.
+7. `docs/TECH_REFINED.md`: objetivo estrategico de la capa IA.
+8. `docs/architecture-caporal-ai.svg`: diagrama de arquitectura del sistema.

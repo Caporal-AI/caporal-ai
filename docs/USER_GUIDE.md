@@ -1,5 +1,12 @@
 # Caporal AI - Guia Rapida de Uso
 
+## Documentos de apoyo
+
+1. `CODEBASE_GUIDE_45M.md`: guia tecnica para entender el codebase completo.
+2. `HANDS_ON_VALIDATION_20M.md`: pruebas manuales reproducibles en 20 minutos.
+3. `RAG_INGESTION_PACKAGE.md`: flujo de carga de conocimiento y benchmark de calidad IA.
+4. `architecture-caporal-ai.svg`: diagrama de arquitectura y flujos.
+
 ## 1) Preparar entorno
 
 1. Ejecuta `docker compose -f infra/docker-compose.yml up --build -d`.

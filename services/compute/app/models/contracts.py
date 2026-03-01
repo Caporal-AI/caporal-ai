@@ -99,6 +99,42 @@ class ConstraintReportItem(BaseModel):
     slack: float
 
 
+InfeasibilityReasonCode = Literal[
+    "LOWER_BOUNDS_SUM",
+    "UPPER_BOUNDS_SUM",
+    "CONSTRAINT_CONFLICT",
+    "SOLVER_FAILURE",
+    "UNKNOWN",
+]
+
+
+class InfeasibilityPriorityAction(BaseModel):
+    priority: int = Field(ge=1)
+    title: str
+    reason: str
+    ingredientId: str | None = None
+    ingredientName: str | None = None
+    constraintCode: str | None = None
+    currentMinPct: float | None = None
+    currentMaxPct: float | None = None
+    suggestedMinPct: float | None = None
+    suggestedMaxPct: float | None = None
+    deltaPct: float | None = None
+
+
+class InfeasibilityAlternative(BaseModel):
+    title: str
+    summary: str
+    tradeoff: str | None = None
+
+
+class InfeasibilityAnalysis(BaseModel):
+    reasonCode: InfeasibilityReasonCode
+    summary: str
+    priorityActions: list[InfeasibilityPriorityAction] = Field(default_factory=list)
+    alternatives: list[InfeasibilityAlternative] = Field(default_factory=list)
+
+
 class SolverMeta(BaseModel):
     method: Literal["highs"]
     runtimeMs: int
@@ -149,6 +185,7 @@ class OptimizeResponse(BaseModel):
     constraintsReport: list[ConstraintReportItem]
     solverMeta: SolverMeta
     warnings: list[str] = Field(default_factory=list)
+    infeasibilityAnalysis: InfeasibilityAnalysis | None = None
     weeklyPlan: WeeklyDietPlan | None = None
 
 
@@ -215,6 +252,8 @@ class AgentContext(BaseModel):
     constraintsReport: list[ConstraintReportItem] = Field(default_factory=list)
     totalCostMxnPerHeadDay: float | None = None
     ingredients: list[IngredientInput] = Field(default_factory=list)
+    solverWarnings: list[str] = Field(default_factory=list)
+    infeasibilityAnalysis: InfeasibilityAnalysis | None = None
     batchContext: BatchContextInput | None = None
     projection: ProjectionResponse | None = None
     salePriceMxnPerKg: float | None = None
@@ -292,6 +331,10 @@ class RagDocumentInput(BaseModel):
     title: str = Field(min_length=1)
     content: str = Field(min_length=1)
     snippet: str | None = None
+    sourceType: str | None = None
+    region: str | None = None
+    topic: str | None = None
+    metadata: dict[str, str | float | int | bool | None] = Field(default_factory=dict)
 
 
 class ProjectionRequest(BaseModel):

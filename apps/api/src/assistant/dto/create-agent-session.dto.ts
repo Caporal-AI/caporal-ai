@@ -1,11 +1,11 @@
-import { IsOptional, IsString } from 'class-validator';
+import { IsOptional, IsString, IsUUID } from 'class-validator';
 
 export class CreateAgentSessionDto {
-  @IsString()
+  @IsUUID()
   @IsOptional()
   dietRunId?: string;
 
-  @IsString()
+  @IsUUID()
   @IsOptional()
   batchId?: string;
 

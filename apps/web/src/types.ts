@@ -83,6 +83,40 @@ export interface ConstraintReportItem {
   slack: number;
 }
 
+export type InfeasibilityReasonCode =
+  | 'LOWER_BOUNDS_SUM'
+  | 'UPPER_BOUNDS_SUM'
+  | 'CONSTRAINT_CONFLICT'
+  | 'SOLVER_FAILURE'
+  | 'UNKNOWN';
+
+export interface InfeasibilityPriorityAction {
+  priority: number;
+  title: string;
+  reason: string;
+  ingredientId?: string;
+  ingredientName?: string;
+  constraintCode?: string;
+  currentMinPct?: number;
+  currentMaxPct?: number;
+  suggestedMinPct?: number;
+  suggestedMaxPct?: number;
+  deltaPct?: number;
+}
+
+export interface InfeasibilityAlternative {
+  title: string;
+  summary: string;
+  tradeoff?: string;
+}
+
+export interface InfeasibilityAnalysis {
+  reasonCode: InfeasibilityReasonCode;
+  summary: string;
+  priorityActions: InfeasibilityPriorityAction[];
+  alternatives: InfeasibilityAlternative[];
+}
+
 export interface WeeklyDietDay {
   dayNumber: number;
   mix: MixItem[];
@@ -143,6 +177,7 @@ export interface DietRunSolution {
     runtimeMs: number;
   };
   warnings: string[];
+  infeasibilityAnalysis?: InfeasibilityAnalysis;
   weeklyPlan?: WeeklyDietPlan;
   projection?: ProjectionResponse;
   sellSignal?: SellSignal;
@@ -158,6 +193,17 @@ export interface DietRun {
       intakeDmKgPerDay: number;
       constraints: Constraint[];
     };
+    ingredients?: Array<{
+      id: string;
+      name: string;
+      priceMxnPerKgAsFed: number;
+      dryMatterPct: number;
+      nutrients: Record<string, number>;
+      boundsPct: {
+        min: number;
+        max: number;
+      };
+    }>;
   };
   solutionSnapshotJson: DietRunSolution;
   createdAt: string;

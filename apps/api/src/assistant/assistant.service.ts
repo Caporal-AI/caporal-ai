@@ -14,8 +14,12 @@ import type {
   AskRequest,
   AskResponse,
   IngredientInput,
+  OptimizeRequest,
+  OptimizeResponse,
 } from '../../../../packages/contracts/src';
 import { ComputeClientPort, COMPUTE_CLIENT } from '../compute/compute-client.port';
+import { ensureInfeasibilityAnalysis } from '../common/infeasibility-analysis.util';
+import { enrichNutrientsFromSeedFallback, sanitizeNutrientsMap } from '../common/nutrients.util';
 import { BatchProjection } from '../batches/batch-projection.entity';
 import { Batch } from '../batches/batch.entity';
 import { DietRun, DietRunStatus } from '../diets/diet-run.entity';
@@ -375,7 +379,29 @@ export class AssistantService {
       mix?: Array<Record<string, unknown>>;
       constraintsReport?: Array<Record<string, unknown>>;
       totalCostMxnPerHeadDay?: number;
+      warnings?: string[];
+      infeasibilityAnalysis?: Record<string, unknown>;
     };
+    const inputs = (dietRun?.inputsSnapshotJson ?? {}) as Partial<OptimizeRequest>;
+    const normalizedSolution =
+      dietRun && inputs.animalProfile && Array.isArray(inputs.ingredients)
+        ? ensureInfeasibilityAnalysis(
+            inputs as OptimizeRequest,
+            {
+              ...(solution as unknown as OptimizeResponse),
+              feasible: dietRun.status === DietRunStatus.SUCCESS,
+              mix: (solution.mix ?? []) as unknown as OptimizeResponse['mix'],
+              totalCostMxnPerHeadDay: solution.totalCostMxnPerHeadDay ?? 0,
+              constraintsReport:
+                (solution.constraintsReport ?? []) as unknown as OptimizeResponse['constraintsReport'],
+              solverMeta: (solution as unknown as OptimizeResponse).solverMeta ?? {
+                method: 'highs',
+                runtimeMs: 0,
+              },
+              warnings: (solution.warnings ?? []) as string[],
+            },
+          )
+        : (solution as unknown as OptimizeResponse);
 
     const ingredients = await this.buildIngredientInputs();
 
@@ -397,13 +423,16 @@ export class AssistantService {
         : undefined,
       currentMix: (solution.mix ?? []) as unknown as AgentContext['currentMix'],
       constraintsReport:
-        (solution.constraintsReport ?? []) as unknown as AgentContext['constraintsReport'],
+        (normalizedSolution.constraintsReport ?? []) as unknown as AgentContext['constraintsReport'],
       totalCostMxnPerHeadDay:
-        solution.totalCostMxnPerHeadDay ??
+        normalizedSolution.totalCostMxnPerHeadDay ??
         (latestProjection?.projectionJson as { economicProjection?: { estimatedCostMxnPerHead?: number } })
           ?.economicProjection?.estimatedCostMxnPerHead ??
         undefined,
       ingredients,
+      solverWarnings: (normalizedSolution.warnings ?? []) as unknown as AgentContext['solverWarnings'],
+      infeasibilityAnalysis:
+        (normalizedSolution.infeasibilityAnalysis ?? undefined) as AgentContext['infeasibilityAnalysis'],
       batchContext: batch
         ? {
             batchId: batch.id,
@@ -442,7 +471,10 @@ export class AssistantService {
         name: ingredient.name,
         priceMxnPerKgAsFed: ingredient.isActive ? latestPrice.priceMxnPerKgAsFed : 0,
         dryMatterPct: ingredient.dryMatterPct,
-        nutrients: ingredient.nutrientsJson,
+        nutrients: enrichNutrientsFromSeedFallback(
+          ingredient.name,
+          sanitizeNutrientsMap(ingredient.nutrientsJson as Record<string, unknown>),
+        ),
         boundsPct: {
           min: ingredient.minInclusionPct,
           max: ingredient.maxInclusionPct,

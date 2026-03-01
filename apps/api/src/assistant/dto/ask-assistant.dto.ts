@@ -1,11 +1,12 @@
 import { Type } from 'class-transformer';
-import { IsNumber, IsOptional, IsString, Min } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsOptional, IsString, IsUUID, Min } from 'class-validator';
 
 export class AskAssistantDto {
-  @IsString()
+  @IsUUID()
   dietRunId!: string;
 
   @IsString()
+  @IsNotEmpty()
   question!: string;
 
   @Type(() => Number)

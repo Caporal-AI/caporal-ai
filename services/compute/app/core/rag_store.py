@@ -125,38 +125,60 @@ def seed_default_documents() -> None:
             row = cursor.fetchone()
             count = int(row[0]) if row else 0
 
-            if count >= 20:
-                return
+            if count < 20:
+                for document in SEED_RAG_DOCUMENTS:
+                    embedding = embedding_to_vector_literal(embed_text(document["content"]))
+                    snippet = document["content"][:320]
+                    cursor.execute(
+                        """
+                        INSERT INTO rag_documents (title, content, snippet, embedding)
+                        VALUES (%s, %s, %s, %s::vector)
+                        ON CONFLICT (title)
+                        DO UPDATE SET content = EXCLUDED.content,
+                                      snippet = EXCLUDED.snippet,
+                                      embedding = EXCLUDED.embedding;
+                        """,
+                        (document["title"], document["content"], snippet, embedding),
+                    )
+                    source_id = _upsert_source(
+                        cursor=cursor,
+                        title=document["title"],
+                        content=document["content"],
+                        source_type="technical_note",
+                        region="MX",
+                        metadata={"topic": _guess_topic(document["title"], document["content"])},
+                    )
+                    _replace_chunks_for_source(
+                        cursor=cursor,
+                        source_id=source_id,
+                        content=document["content"],
+                        metadata={"topic": _guess_topic(document["title"], document["content"])},
+                    )
 
-            for document in SEED_RAG_DOCUMENTS:
-                embedding = embedding_to_vector_literal(embed_text(document["content"]))
-                snippet = document["content"][:320]
-                cursor.execute(
-                    """
-                    INSERT INTO rag_documents (title, content, snippet, embedding)
-                    VALUES (%s, %s, %s, %s::vector)
-                    ON CONFLICT (title)
-                    DO UPDATE SET content = EXCLUDED.content,
-                                  snippet = EXCLUDED.snippet,
-                                  embedding = EXCLUDED.embedding;
-                    """,
-                    (document["title"], document["content"], snippet, embedding),
-                )
-                source_id = _upsert_source(
-                    cursor=cursor,
-                    title=document["title"],
-                    content=document["content"],
-                    source_type="technical_note",
-                    region="MX",
-                    metadata={"topic": _guess_topic(document["title"], document["content"])},
-                )
-                _replace_chunks_for_source(
-                    cursor=cursor,
-                    source_id=source_id,
-                    content=document["content"],
-                    metadata={"topic": _guess_topic(document["title"], document["content"])},
-                )
+            if _needs_index_repair(cursor):
+                _ensure_sources_and_chunks_from_documents(cursor=cursor)
         connection.commit()
+
+
+def repair_rag_index(force: bool = False) -> dict[str, int | bool]:
+    with psycopg.connect(settings.dsn) as connection:
+        with connection.cursor() as cursor:
+            before = _read_index_stats(cursor)
+            repaired = bool(force or _is_inconsistent_stats(before))
+            if repaired and before["docs"] > 0:
+                _ensure_sources_and_chunks_from_documents(cursor=cursor)
+            after = _read_index_stats(cursor)
+        connection.commit()
+
+    return {
+        "repaired": repaired,
+        "docsBefore": before["docs"],
+        "sourcesBefore": before["sources"],
+        "chunksBefore": before["chunks"],
+        "docsAfter": after["docs"],
+        "sourcesAfter": after["sources"],
+        "chunksAfter": after["chunks"],
+    }
 
 
 def retrieve_similar_documents(question: str, top_k: int) -> list[RetrievedDocument]:
@@ -191,7 +213,7 @@ def retrieve_similar_documents(question: str, top_k: int) -> list[RetrievedDocum
     ]
 
 
-def upsert_documents(documents: list[dict[str, str]]) -> int:
+def upsert_documents(documents: list[dict[str, object]]) -> int:
     inserted = 0
 
     with psycopg.connect(settings.dsn) as connection:
@@ -201,6 +223,14 @@ def upsert_documents(documents: list[dict[str, str]]) -> int:
                 title = document["title"]
                 snippet = document.get("snippet") or content[:320]
                 embedding = embedding_to_vector_literal(embed_text(content))
+                topic = str(document.get("topic") or _guess_topic(title, content))
+                metadata_raw = document.get("metadata")
+                metadata: dict[str, object] = {"topic": topic}
+                if isinstance(metadata_raw, dict):
+                    for key, value in metadata_raw.items():
+                        if isinstance(value, (str, int, float, bool)) or value is None:
+                            metadata[str(key)] = value
+
                 cursor.execute(
                     """
                     INSERT INTO rag_documents (title, content, snippet, embedding)
@@ -218,13 +248,13 @@ def upsert_documents(documents: list[dict[str, str]]) -> int:
                     content=content,
                     source_type=document.get("sourceType") or "technical_note",
                     region=document.get("region") or "MX",
-                    metadata={"topic": document.get("topic") or _guess_topic(title, content)},
+                    metadata=metadata,
                 )
                 _replace_chunks_for_source(
                     cursor=cursor,
                     source_id=source_id,
                     content=content,
-                    metadata={"topic": document.get("topic") or _guess_topic(title, content)},
+                    metadata=metadata,
                 )
                 inserted += 1
         connection.commit()
@@ -242,6 +272,61 @@ def retrieve_enriched_chunks(
     query_vector = embedding_to_vector_literal(embed_text(question))
     filters = filters or {}
 
+    rows = _query_chunk_candidates(
+        query_vector=query_vector,
+        candidate_limit=candidate_limit,
+        filters=filters,
+    )
+    if not rows:
+        repair_rag_index(force=False)
+        rows = _query_chunk_candidates(
+            query_vector=query_vector,
+            candidate_limit=candidate_limit,
+            filters=filters,
+        )
+
+    if not rows:
+        return _retrieve_from_documents(
+            question=question,
+            query_vector=query_vector,
+            top_k=top_k,
+        )
+
+    question_tokens = _tokens(question)
+    ranked: list[RetrievedChunk] = []
+    for row in rows:
+        chunk_id = str(row[0])
+        source_id = str(row[1])
+        source_title = str(row[2])
+        snippet = str(row[3])
+        full_chunk = str(row[4])
+        metadata_raw = str(row[5] or "{}")
+        score_vector = float(row[6])
+        score_lexical = _lexical_overlap(question_tokens, _tokens(full_chunk))
+        score_hybrid = (0.75 * score_vector) + (0.25 * score_lexical)
+        ranked.append(
+            RetrievedChunk(
+                chunk_id=chunk_id,
+                source_id=source_id,
+                source_title=source_title,
+                snippet=snippet,
+                score_vector=score_vector,
+                score_lexical=score_lexical,
+                score_hybrid=score_hybrid,
+                metadata=json.loads(metadata_raw) if metadata_raw else {},
+            )
+        )
+
+    ranked.sort(key=lambda item: item.score_hybrid, reverse=True)
+    return ranked[:top_k]
+
+
+def _query_chunk_candidates(
+    *,
+    query_vector: str,
+    candidate_limit: int,
+    filters: dict[str, str],
+) -> list[tuple]:
     clauses = []
     params: list[object] = [query_vector]
 
@@ -278,29 +363,54 @@ def retrieve_enriched_chunks(
                 [*params, query_vector, candidate_limit],
             )
             rows = cursor.fetchall()
+    return rows
+
+
+def _retrieve_from_documents(
+    *,
+    question: str,
+    query_vector: str,
+    top_k: int,
+) -> list[RetrievedChunk]:
+    candidate_limit = max(top_k * 4, 8)
+    with psycopg.connect(settings.dsn) as connection:
+        with connection.cursor() as cursor:
+            cursor.execute(
+                """
+                SELECT
+                  id::text,
+                  title,
+                  COALESCE(snippet, substring(content from 1 for 420)) AS snippet,
+                  content,
+                  (1 - (embedding <=> %s::vector))::float8 AS score_vector
+                FROM rag_documents
+                ORDER BY embedding <=> %s::vector
+                LIMIT %s;
+                """,
+                (query_vector, query_vector, candidate_limit),
+            )
+            rows = cursor.fetchall()
 
     question_tokens = _tokens(question)
     ranked: list[RetrievedChunk] = []
     for row in rows:
-        chunk_id = str(row[0])
-        source_id = str(row[1])
-        source_title = str(row[2])
-        snippet = str(row[3])
-        full_chunk = str(row[4])
-        metadata_raw = str(row[5] or "{}")
-        score_vector = float(row[6])
-        score_lexical = _lexical_overlap(question_tokens, _tokens(full_chunk))
-        score_hybrid = (0.75 * score_vector) + (0.25 * score_lexical)
+        doc_id = str(row[0])
+        title = str(row[1])
+        snippet = str(row[2])
+        full_text = str(row[3])
+        score_vector = float(row[4])
+        score_lexical = _lexical_overlap(question_tokens, _tokens(full_text))
+        score_hybrid = (0.7 * score_vector) + (0.3 * score_lexical)
         ranked.append(
             RetrievedChunk(
-                chunk_id=chunk_id,
-                source_id=source_id,
-                source_title=source_title,
+                chunk_id=f"doc:{doc_id}",
+                source_id=doc_id,
+                source_title=title,
                 snippet=snippet,
                 score_vector=score_vector,
                 score_lexical=score_lexical,
                 score_hybrid=score_hybrid,
-                metadata=json.loads(metadata_raw) if metadata_raw else {},
+                metadata={"fallback": "rag_documents"},
             )
         )
 
@@ -403,6 +513,113 @@ def _upsert_source(
     )
     row = cursor.fetchone()
     return str(row[0])
+
+
+def _needs_index_repair(cursor) -> bool:
+    stats = _read_index_stats(cursor)
+    return _is_inconsistent_stats(stats)
+
+
+def _is_inconsistent_stats(stats: dict[str, int]) -> bool:
+    docs_count = stats["docs"]
+    if docs_count == 0:
+        return False
+    return (
+        stats["sources"] < docs_count
+        or stats["chunks"] < docs_count
+        or stats["sourcesWithoutChunks"] > 0
+    )
+
+
+def _read_index_stats(cursor) -> dict[str, int]:
+    cursor.execute("SELECT count(*) FROM rag_documents;")
+    docs_row = cursor.fetchone()
+    docs_count = int(docs_row[0]) if docs_row else 0
+
+    cursor.execute("SELECT count(*) FROM rag_sources;")
+    sources_row = cursor.fetchone()
+    sources_count = int(sources_row[0]) if sources_row else 0
+
+    cursor.execute("SELECT count(*) FROM rag_chunks;")
+    chunks_row = cursor.fetchone()
+    chunks_count = int(chunks_row[0]) if chunks_row else 0
+
+    cursor.execute(
+        """
+        SELECT count(*) FROM (
+            SELECT s.id
+            FROM rag_sources s
+            LEFT JOIN rag_chunks c ON c.source_id = s.id
+            GROUP BY s.id
+            HAVING count(c.id) = 0
+        ) AS empty_sources;
+        """
+    )
+    empty_sources_row = cursor.fetchone()
+    sources_without_chunks = int(empty_sources_row[0]) if empty_sources_row else 0
+
+    return {
+        "docs": docs_count,
+        "sources": sources_count,
+        "chunks": chunks_count,
+        "sourcesWithoutChunks": sources_without_chunks,
+    }
+
+
+def _ensure_sources_and_chunks_from_documents(*, cursor) -> None:
+    cursor.execute(
+        """
+        SELECT title, content
+        FROM rag_documents
+        ORDER BY created_at ASC, title ASC;
+        """
+    )
+    documents = cursor.fetchall()
+
+    for row in documents:
+        title = str(row[0])
+        content = str(row[1])
+        default_topic = _guess_topic(title, content)
+
+        cursor.execute(
+            """
+            SELECT id::text, COALESCE(metadata_json->>'topic', '')
+            FROM rag_sources
+            WHERE title = %s;
+            """,
+            (title,),
+        )
+        source_row = cursor.fetchone()
+
+        if source_row:
+            source_id = str(source_row[0])
+            source_topic_raw = str(source_row[1] or "").strip()
+            source_topic = source_topic_raw if source_topic_raw else default_topic
+        else:
+            source_id = _upsert_source(
+                cursor=cursor,
+                title=title,
+                content=content,
+                source_type="technical_note",
+                region="MX",
+                metadata={"topic": default_topic},
+            )
+            source_topic = default_topic
+
+        cursor.execute(
+            "SELECT count(*) FROM rag_chunks WHERE source_id = %s::uuid;",
+            (source_id,),
+        )
+        chunk_count_row = cursor.fetchone()
+        chunk_count = int(chunk_count_row[0]) if chunk_count_row else 0
+
+        if chunk_count == 0:
+            _replace_chunks_for_source(
+                cursor=cursor,
+                source_id=source_id,
+                content=content,
+                metadata={"topic": source_topic},
+            )
 
 
 def _replace_chunks_for_source(

@@ -14,6 +14,8 @@ import { IngredientPrice } from '../ingredients/ingredient-price.entity';
 import { Ingredient } from '../ingredients/ingredient.entity';
 import { MetricsService } from '../metrics/metrics.service';
 import { Repository } from 'typeorm';
+import { ensureInfeasibilityAnalysis } from '../common/infeasibility-analysis.util';
+import { enrichNutrientsFromSeedFallback, sanitizeNutrientsMap } from '../common/nutrients.util';
 import { DietRun, DietRunStatus } from './diet-run.entity';
 import { GenerateDietDto } from './dto/generate-diet.dto';
 
@@ -81,7 +83,10 @@ export class DietsService {
         name: ingredient.name,
         priceMxnPerKgAsFed: latestPrice.priceMxnPerKgAsFed,
         dryMatterPct: ingredient.dryMatterPct,
-        nutrients: ingredient.nutrientsJson,
+        nutrients: enrichNutrientsFromSeedFallback(
+          ingredient.name,
+          sanitizeNutrientsMap(ingredient.nutrientsJson as Record<string, unknown>),
+        ),
         boundsPct: {
           min: ingredient.minInclusionPct,
           max: ingredient.maxInclusionPct,
@@ -146,13 +151,14 @@ export class DietsService {
       });
     }
 
-    dietRun.solutionSnapshotJson = computeResponse as unknown as Record<string, unknown>;
-    dietRun.status = computeResponse.feasible ? DietRunStatus.SUCCESS : DietRunStatus.INFEASIBLE;
+    const normalizedComputeResponse = ensureInfeasibilityAnalysis(optimizeRequest, computeResponse);
+    dietRun.solutionSnapshotJson = normalizedComputeResponse as unknown as Record<string, unknown>;
+    dietRun.status = normalizedComputeResponse.feasible ? DietRunStatus.SUCCESS : DietRunStatus.INFEASIBLE;
     const saved = await this.dietRunRepository.save(dietRun);
 
-    const hardViolations = computeResponse.constraintsReport.filter((item) => !item.met).length;
+    const hardViolations = normalizedComputeResponse.constraintsReport.filter((item) => !item.met).length;
     this.metricsService.recordDietRun(
-      computeResponse.feasible,
+      normalizedComputeResponse.feasible,
       hardViolations,
       Date.now() - startedAt,
       Date.now() - computeStartedAt,

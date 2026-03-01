@@ -14,6 +14,7 @@ from app.models.contracts import (
     AgentRespondResponse,
     CitationEvidence,
     ConstraintReportItem,
+    InfeasibilityAnalysis,
     OptimizeOptions,
     OptimizeRequest,
     ProjectionRequest,
@@ -64,6 +65,7 @@ def respond_agent(payload: AgentRespondRequest) -> AgentRespondResponse:
     citations = _to_citation_evidence(chunks)
 
     simulation_diff: SimulationDiff | None = None
+    simulation_hint: str | None = None
     projection_payload: dict[str, object] | None = None
 
     if mode == "WHAT_IF" and len(tool_calls) < max_tool_calls:
@@ -78,6 +80,8 @@ def respond_agent(payload: AgentRespondRequest) -> AgentRespondResponse:
             tool_calls.append(simulation.record)
             if simulation.payload.get("simulationDiff") is not None:
                 simulation_diff = SimulationDiff.model_validate(simulation.payload["simulationDiff"])
+            if isinstance(simulation.payload.get("hint"), str):
+                simulation_hint = str(simulation.payload.get("hint"))
             if simulation.payload.get("safetyFlags"):
                 safety_flags.extend(str(item) for item in simulation.payload["safetyFlags"])
 
@@ -102,7 +106,10 @@ def respond_agent(payload: AgentRespondRequest) -> AgentRespondResponse:
         projection_payload=projection_payload,
         citations=citations,
         context_constraints=payload.context.constraintsReport,
+        context_solver_warnings=payload.context.solverWarnings,
+        context_infeasibility=payload.context.infeasibilityAnalysis,
         safety_flags=safety_flags,
+        simulation_hint=simulation_hint,
     )
     answer = render_with_openai(
         mode=mode,
@@ -246,7 +253,14 @@ def _simulate_what_if(payload: AgentRespondRequest) -> dict[str, object]:
     mix_pct_by_id = {item.ingredientId: item.pctDm for item in current_mix}
     candidate = _pick_ingredient(ingredients, ingredient_hint)
     if candidate is None:
-        return {"simulationDiff": None, "safetyFlags": ["NEEDS_MORE_INPUT"]}
+        return {
+            "simulationDiff": None,
+            "safetyFlags": ["NEEDS_MORE_INPUT"],
+            "hint": (
+                f"No pude identificar el ingrediente '{ingredient_hint}'. "
+                "Usa el nombre tal como aparece en la lista de ingredientes."
+            ),
+        }
 
     adjusted_ingredients = []
     for ingredient in ingredients:
@@ -264,7 +278,26 @@ def _simulate_what_if(payload: AgentRespondRequest) -> dict[str, object]:
             max_bound = min(max_bound, max(0.0, baseline - pct_change))
 
         if min_bound > max_bound:
-            return {"simulationDiff": None, "safetyFlags": ["UNSAFE_REQUEST_BLOCKED"]}
+            increase_actions = ("sube", "aumenta", "incrementa")
+            if action in increase_actions:
+                max_delta = max(0.0, ingredient.boundsPct.max - baseline)
+                hint = (
+                    f"No puedo subir {candidate.name} en {pct_change:.1f}%: "
+                    f"con la mezcla actual ({baseline:.2f}%), el maximo permitido es "
+                    f"{ingredient.boundsPct.max:.2f}% (cambio maximo sugerido: +{max_delta:.2f}%)."
+                )
+            else:
+                max_delta = max(0.0, baseline - ingredient.boundsPct.min)
+                hint = (
+                    f"No puedo bajar {candidate.name} en {pct_change:.1f}%: "
+                    f"con la mezcla actual ({baseline:.2f}%), el minimo permitido es "
+                    f"{ingredient.boundsPct.min:.2f}% (cambio maximo sugerido: -{max_delta:.2f}%)."
+                )
+            return {
+                "simulationDiff": None,
+                "safetyFlags": ["OUT_OF_BOUNDS_REQUEST"],
+                "hint": hint,
+            }
 
         adjusted_ingredient = ingredient.model_copy(deep=True)
         adjusted_ingredient.boundsPct.min = min_bound
@@ -355,7 +388,10 @@ def _build_answer(
     projection_payload: dict[str, object] | None,
     citations: list[CitationEvidence],
     context_constraints: list[ConstraintReportItem],
+    context_solver_warnings: list[str],
+    context_infeasibility: InfeasibilityAnalysis | None,
     safety_flags: list[str],
+    simulation_hint: str | None = None,
 ) -> str:
     sources_line = (
         "Fuentes: "
@@ -371,6 +407,12 @@ def _build_answer(
         else "La corrida actual cumple restricciones duras reportadas."
     )
 
+    if mode == "WHAT_IF" and "OUT_OF_BOUNDS_REQUEST" in safety_flags:
+        return simulation_hint or (
+            "El cambio solicitado rebasa los limites permitidos para ese ingrediente. "
+            "Ajusta el porcentaje y vuelve a simular."
+        )
+
     if "UNSAFE_REQUEST_BLOCKED" in safety_flags:
         return (
             "Para proteger seguridad nutricional no puedo aplicar ese ajuste directo. "
@@ -378,6 +420,25 @@ def _build_answer(
         )
 
     if mode == "WHY":
+        if context_infeasibility is not None:
+            top_action = context_infeasibility.priorityActions[0] if context_infeasibility.priorityActions else None
+            top_action_line = (
+                f"Prioridad 1: {top_action.title}. {top_action.reason}"
+                if top_action is not None
+                else "No hay accion prioritaria estructurada en esta corrida."
+            )
+            return (
+                f"La corrida actual es no factible. Causa principal: {context_infeasibility.summary} "
+                f"{top_action_line} {sources_line}"
+            )
+
+        if context_solver_warnings:
+            first_warning = context_solver_warnings[0]
+            return (
+                f"El solver reporto una alerta clave: {first_warning}. "
+                f"{compliance_line} {sources_line}"
+            )
+
         return f"{compliance_line} {sources_line}"
 
     if mode == "WHAT_IF":
