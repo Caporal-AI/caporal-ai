@@ -146,6 +146,165 @@ export interface AskResponse {
   safetyFlags: string[];
 }
 
+export type AgentMode = 'AUTO' | 'WHY' | 'WHAT_IF' | 'NEXT_BEST_ACTION';
+
+export interface CitationEvidence {
+  sourceId: string;
+  chunkId: string;
+  sourceTitle: string;
+  snippet: string;
+  offsetStart: number;
+  offsetEnd: number;
+  score: number;
+  metadata?: Record<string, string | number | boolean | null>;
+}
+
+export interface ToolCallRecord {
+  toolName: string;
+  status: 'SUCCESS' | 'ERROR' | 'SKIPPED';
+  latencyMs: number;
+  input: Record<string, unknown>;
+  output: Record<string, unknown>;
+}
+
+export interface SimulationDiff {
+  costDeltaMxnPerHeadDay: number;
+  feasibleBefore: boolean;
+  feasibleAfter: boolean;
+  hardConstraintDelta: number;
+  riskFlags: string[];
+}
+
+export interface AgentContext {
+  dietRunId?: string;
+  batchId?: string;
+  animalProfile?: AnimalProfileInput;
+  currentMix?: MixItem[];
+  constraintsReport?: ConstraintReportItem[];
+  totalCostMxnPerHeadDay?: number;
+  ingredients?: IngredientInput[];
+  batchContext?: BatchContext;
+  projection?: ProjectionResponse;
+  salePriceMxnPerKg?: number;
+  purchasePriceMxnPerKg?: number;
+}
+
+export interface AgentRespondRequest {
+  sessionId: string;
+  message: string;
+  mode?: AgentMode;
+  context: AgentContext;
+  options?: {
+    topK?: number;
+    maxToolCalls?: number;
+  };
+}
+
+export interface AgentRespondResponse {
+  mode: Exclude<AgentMode, 'AUTO'>;
+  answer: string;
+  citations: CitationEvidence[];
+  safetyFlags: string[];
+  toolCalls: ToolCallRecord[];
+  simulationDiff?: SimulationDiff;
+  confidence: 'LOW' | 'MEDIUM' | 'HIGH';
+}
+
+export interface RagChunkResult {
+  sourceId: string;
+  chunkId: string;
+  sourceTitle: string;
+  snippet: string;
+  scoreVector: number;
+  scoreLexical: number;
+  scoreHybrid: number;
+  metadata: Record<string, string | number | boolean | null>;
+}
+
+export interface RagRetrieveRequest {
+  question: string;
+  topK?: number;
+  filters?: {
+    region?: string;
+    sourceType?: string;
+    topic?: string;
+  };
+}
+
+export interface RagRetrieveResponse {
+  question: string;
+  chunks: RagChunkResult[];
+}
+
+export interface RagEvalScenario {
+  id: string;
+  question: string;
+  requiresCitation: boolean;
+  expectedKeywords?: string[];
+}
+
+export interface RagEvaluateRequest {
+  runName: string;
+  scenarios: RagEvalScenario[];
+}
+
+export interface RagEvaluateResponse {
+  runName: string;
+  summary: {
+    totalScenarios: number;
+    citationCoverageTechnical: number;
+    groundedResponseRate: number;
+    unsafeNumericLeakageRate: number;
+  };
+  rows: Array<{
+    id: string;
+    retrieved: number;
+    hasCitation: boolean;
+    grounded: boolean;
+    leakedNumeric: boolean;
+    topSourceTitle: string | null;
+  }>;
+}
+
+export interface AgentSession {
+  id: string;
+  dietRunId?: string | null;
+  batchId?: string | null;
+  title: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface AgentMessage {
+  id: string;
+  sessionId: string;
+  role: 'USER' | 'ASSISTANT';
+  mode?: Exclude<AgentMode, 'AUTO'> | null;
+  content: string;
+  citationsJson: CitationEvidence[];
+  safetyFlagsJson: string[];
+  simulationDiffJson?: SimulationDiff | null;
+  createdAt: string;
+}
+
+export interface AgentTraceStep {
+  id: string;
+  sessionId: string;
+  messageId?: string | null;
+  toolName: string;
+  status: 'SUCCESS' | 'ERROR' | 'SKIPPED';
+  latencyMs: number;
+  inputJson: Record<string, unknown>;
+  outputJson: Record<string, unknown>;
+  createdAt: string;
+}
+
+export interface AgentTraceResponse {
+  session: AgentSession;
+  messages: AgentMessage[];
+  toolCalls: AgentTraceStep[];
+}
+
 export interface ProjectionRequest {
   batchContext: BatchContext;
   horizonDays: number;

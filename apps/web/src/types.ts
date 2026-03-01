@@ -177,3 +177,63 @@ export interface RagInteraction {
   safetyFlagsJson: string[];
   createdAt: string;
 }
+
+export type AgentMode = 'AUTO' | 'WHY' | 'WHAT_IF' | 'NEXT_BEST_ACTION';
+
+export interface CitationEvidence {
+  sourceId: string;
+  chunkId: string;
+  sourceTitle: string;
+  snippet: string;
+  offsetStart: number;
+  offsetEnd: number;
+  score: number;
+  metadata?: Record<string, string | number | boolean | null>;
+}
+
+export interface SimulationDiff {
+  costDeltaMxnPerHeadDay: number;
+  feasibleBefore: boolean;
+  feasibleAfter: boolean;
+  hardConstraintDelta: number;
+  riskFlags: string[];
+}
+
+export interface AgentSession {
+  id: string;
+  dietRunId?: string | null;
+  batchId?: string | null;
+  title: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface AgentMessage {
+  id: string;
+  sessionId: string;
+  role: 'USER' | 'ASSISTANT';
+  mode?: Exclude<AgentMode, 'AUTO'> | null;
+  content: string;
+  citationsJson: CitationEvidence[];
+  safetyFlagsJson: string[];
+  simulationDiffJson?: SimulationDiff | null;
+  createdAt: string;
+}
+
+export interface AgentTraceStep {
+  id: string;
+  sessionId: string;
+  messageId?: string | null;
+  toolName: string;
+  status: 'SUCCESS' | 'ERROR' | 'SKIPPED';
+  latencyMs: number;
+  inputJson: Record<string, unknown>;
+  outputJson: Record<string, unknown>;
+  createdAt: string;
+}
+
+export interface AgentTraceResponse {
+  session: AgentSession;
+  messages: AgentMessage[];
+  toolCalls: AgentTraceStep[];
+}

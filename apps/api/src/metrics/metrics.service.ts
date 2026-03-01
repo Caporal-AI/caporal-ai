@@ -4,6 +4,8 @@ interface MetricsSnapshot {
   feasible_rate: number;
   hard_constraints_violations: number;
   rag_guardrail_triggers: number;
+  agent_tool_success_rate: number;
+  what_if_completion_rate: number;
   p95_latency_api_ms: number;
   p95_latency_compute_ms: number;
   p95_latency_projection_ms: number;
@@ -18,6 +20,10 @@ export class MetricsService {
   private hardConstraintsViolations = 0;
   private ragGuardrailTriggers = 0;
   private projectionCallsTotal = 0;
+  private agentToolCallsTotal = 0;
+  private agentToolCallsFailed = 0;
+  private whatIfTotal = 0;
+  private whatIfCompleted = 0;
 
   private readonly apiLatenciesMs: number[] = [];
   private readonly computeLatenciesMs: number[] = [];
@@ -48,11 +54,32 @@ export class MetricsService {
     this.pushLatency(this.projectionLatenciesMs, latencyMs);
   }
 
+  recordAgentToolCalls(
+    toolCalls: Array<{ status: string }>,
+    mode?: string,
+    completedWhatIf?: boolean,
+  ): void {
+    this.agentToolCallsTotal += toolCalls.length;
+    this.agentToolCallsFailed += toolCalls.filter((item) => item.status !== 'SUCCESS').length;
+
+    if (mode === 'WHAT_IF') {
+      this.whatIfTotal += 1;
+      if (completedWhatIf) {
+        this.whatIfCompleted += 1;
+      }
+    }
+  }
+
   getSnapshot(): MetricsSnapshot {
     return {
       feasible_rate: this.dietRunsTotal === 0 ? 0 : this.feasibleRuns / this.dietRunsTotal,
       hard_constraints_violations: this.hardConstraintsViolations,
       rag_guardrail_triggers: this.ragGuardrailTriggers,
+      agent_tool_success_rate:
+        this.agentToolCallsTotal === 0
+          ? 0
+          : (this.agentToolCallsTotal - this.agentToolCallsFailed) / this.agentToolCallsTotal,
+      what_if_completion_rate: this.whatIfTotal === 0 ? 0 : this.whatIfCompleted / this.whatIfTotal,
       p95_latency_api_ms: this.p95(this.apiLatenciesMs),
       p95_latency_compute_ms: this.p95(this.computeLatenciesMs),
       p95_latency_projection_ms: this.p95(this.projectionLatenciesMs),

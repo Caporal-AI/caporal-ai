@@ -28,6 +28,8 @@ services:
       DB_USER: caporal
       DB_PASSWORD: caporal
       DB_NAME: caporal
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      OPENAI_MODEL: ${OPENAI_MODEL:-gpt-4o-mini}
     depends_on:
       postgres:
         condition: service_healthy
@@ -53,6 +55,7 @@ services:
       DB_NAME: caporal
       COMPUTE_BASE_URL: http://compute:8000
       COMPUTE_TIMEOUT_MS: 5000
+      CHOKIDAR_USEPOLLING: "true"
     depends_on:
       postgres:
         condition: service_healthy
@@ -60,6 +63,10 @@ services:
         condition: service_healthy
     ports:
       - "3000:3000"
+    volumes:
+      - ../apps/api:/workspace/apps/api
+      - ../packages/contracts:/workspace/packages/contracts
+      - ../tsconfig.base.json:/workspace/tsconfig.base.json:ro
 
   web:
     build:
@@ -71,6 +78,11 @@ services:
         condition: service_started
     ports:
       - "5174:5173"
+    environment:
+      CHOKIDAR_USEPOLLING: "true"
+    volumes:
+      - ../apps/web:/workspace/apps/web
+      - ../tsconfig.base.json:/workspace/tsconfig.base.json:ro
 
   nginx:
     image: nginx:1.27-alpine

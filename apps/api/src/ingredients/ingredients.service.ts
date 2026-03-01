@@ -50,9 +50,26 @@ export class IngredientsService {
     dto: CreateIngredientPriceDto,
   ): Promise<IngredientPrice> {
     const ingredient = await this.findOne(ingredientId);
+    const locationCode = dto.locationCode?.trim() ? dto.locationCode.trim() : null;
+
+    const existing = await this.ingredientPriceRepository
+      .createQueryBuilder('price')
+      .where('price.ingredient_id = :ingredientId', { ingredientId })
+      .andWhere('price.effective_date = :effectiveDate', { effectiveDate: dto.effectiveDate })
+      .andWhere("COALESCE(price.location_code, '') = COALESCE(:locationCode, '')", {
+        locationCode,
+      })
+      .getOne();
+
+    if (existing) {
+      existing.priceMxnPerKgAsFed = dto.priceMxnPerKgAsFed;
+      existing.locationCode = locationCode;
+      return this.ingredientPriceRepository.save(existing);
+    }
+
     const price = this.ingredientPriceRepository.create({
       ...dto,
-      locationCode: dto.locationCode ?? null,
+      locationCode,
       ingredient,
     });
 
@@ -62,10 +79,12 @@ export class IngredientsService {
   async listPrices(ingredientId: string): Promise<IngredientPrice[]> {
     await this.findOne(ingredientId);
 
-    return this.ingredientPriceRepository.find({
-      where: { ingredient: { id: ingredientId } },
-      order: { effectiveDate: 'DESC', createdAt: 'DESC' },
-    });
+    return this.ingredientPriceRepository
+      .createQueryBuilder('price')
+      .where('price.ingredient_id = :ingredientId', { ingredientId })
+      .orderBy('price.created_at', 'DESC')
+      .addOrderBy('price.effective_date', 'DESC')
+      .getMany();
   }
 
   private validateBounds(minPct: number, maxPct: number): void {

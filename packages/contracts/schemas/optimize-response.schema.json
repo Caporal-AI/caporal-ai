@@ -1,0 +1,97 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://caporal.ai/schemas/optimize-response.schema.json",
+  "title": "OptimizeResponse",
+  "type": "object",
+  "required": [
+    "feasible",
+    "mix",
+    "totalCostMxnPerHeadDay",
+    "constraintsReport",
+    "solverMeta",
+    "warnings"
+  ],
+  "properties": {
+    "feasible": { "type": "boolean" },
+    "mix": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["ingredientId", "kgAsFedPerHeadDay", "kgDmPerHeadDay", "pctDm"],
+        "properties": {
+          "ingredientId": { "type": "string" },
+          "kgAsFedPerHeadDay": { "type": "number" },
+          "kgDmPerHeadDay": { "type": "number" },
+          "pctDm": { "type": "number" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "totalCostMxnPerHeadDay": { "type": "number" },
+    "constraintsReport": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["code", "target", "actual", "met", "slack"],
+        "properties": {
+          "code": { "type": "string" },
+          "target": { "type": "string" },
+          "actual": { "type": "number" },
+          "met": { "type": "boolean" },
+          "slack": { "type": "number" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "solverMeta": {
+      "type": "object",
+      "required": ["method", "runtimeMs"],
+      "properties": {
+        "method": { "const": "highs" },
+        "runtimeMs": { "type": "integer", "minimum": 0 }
+      },
+      "additionalProperties": false
+    },
+    "warnings": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "weeklyPlan": {
+      "type": "object",
+      "required": ["days", "totalCostMxnPerHeadWeek", "totalCostMxnPerBatchWeek"],
+      "properties": {
+        "days": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["dayNumber", "mix", "costMxnPerHeadDay", "cumulativeCostMxnPerHead"],
+            "properties": {
+              "dayNumber": { "type": "integer", "minimum": 1 },
+              "mix": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["ingredientId", "kgAsFedPerHeadDay", "kgDmPerHeadDay", "pctDm"],
+                  "properties": {
+                    "ingredientId": { "type": "string" },
+                    "kgAsFedPerHeadDay": { "type": "number" },
+                    "kgDmPerHeadDay": { "type": "number" },
+                    "pctDm": { "type": "number" }
+                  },
+                  "additionalProperties": false
+                }
+              },
+              "costMxnPerHeadDay": { "type": "number" },
+              "cumulativeCostMxnPerHead": { "type": "number" }
+            },
+            "additionalProperties": false
+          }
+        },
+        "totalCostMxnPerHeadWeek": { "type": "number" },
+        "totalCostMxnPerBatchWeek": { "type": "number" }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

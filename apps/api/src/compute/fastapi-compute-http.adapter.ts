@@ -9,6 +9,8 @@ import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
 import { firstValueFrom } from 'rxjs';
 import type {
+  AgentRespondRequest,
+  AgentRespondResponse,
   AskRequest,
   AskResponse,
   OptimizeRequest,
@@ -48,6 +50,10 @@ export class FastApiComputeHttpAdapter implements ComputeClientPort {
 
   project(payload: ProjectionRequest, correlationId: string): Promise<ProjectionResponse> {
     return this.postWithRetry<ProjectionResponse>('/v1/project', payload, correlationId);
+  }
+
+  agentRespond(payload: AgentRespondRequest, correlationId: string): Promise<AgentRespondResponse> {
+    return this.postWithRetry<AgentRespondResponse>('/v1/agent/respond', payload, correlationId);
   }
 
   private async postWithRetry<T>(

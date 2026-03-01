@@ -12,6 +12,7 @@ import {
 } from '@mui/material';
 import { useEffect, useMemo, useState } from 'react';
 import {
+  useGetIngredientPricesQuery,
   useGetIngredientsQuery,
   usePostPriceMutation,
   useUpdateIngredientMutation,
@@ -97,8 +98,32 @@ export function IngredientsScreen(): JSX.Element {
     [ingredients, selectedIngredientId],
   );
 
+  const { data: selectedIngredientPrices } = useGetIngredientPricesQuery(selectedIngredientId ?? '', {
+    skip: !selectedIngredientId,
+  });
+
+  const latestSelectedPrice = selectedIngredientPrices?.[0];
+
   const selectedDraft = selectedIngredient ? drafts[selectedIngredient.id] : undefined;
   const selectedPriceDraft = selectedIngredient ? priceDrafts[selectedIngredient.id] : undefined;
+
+  useEffect(() => {
+    if (!selectedIngredientId || !latestSelectedPrice) {
+      return;
+    }
+
+    setPriceDrafts((current) => ({
+      ...current,
+      [selectedIngredientId]: {
+        price: latestSelectedPrice.priceMxnPerKgAsFed,
+        effectiveDate: latestSelectedPrice.effectiveDate,
+      },
+    }));
+  }, [
+    latestSelectedPrice?.effectiveDate,
+    latestSelectedPrice?.priceMxnPerKgAsFed,
+    selectedIngredientId,
+  ]);
 
   const handleDraftChange = (
     ingredientId: string,
@@ -268,6 +293,16 @@ export function IngredientsScreen(): JSX.Element {
                 <Typography color="text.secondary">
                   Ajusta rangos, calidad nutricional y precio de compra.
                 </Typography>
+                {latestSelectedPrice ? (
+                  <Typography variant="body2" color="text.secondary">
+                    Precio vigente: {latestSelectedPrice.priceMxnPerKgAsFed.toFixed(4)} MXN/kg
+                    (fecha {latestSelectedPrice.effectiveDate})
+                  </Typography>
+                ) : (
+                  <Typography variant="body2" color="warning.main">
+                    Este ingrediente aun no tiene precio registrado.
+                  </Typography>
+                )}
               </Stack>
 
               <Divider />

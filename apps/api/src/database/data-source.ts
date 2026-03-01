@@ -1,6 +1,9 @@
 import 'dotenv/config';
 import { DataSource } from 'typeorm';
 import { AnimalProfile } from '../animal-profiles/animal-profile.entity';
+import { AssistantMessage } from '../assistant/assistant-message.entity';
+import { AssistantSession } from '../assistant/assistant-session.entity';
+import { AssistantToolCall } from '../assistant/assistant-tool-call.entity';
 import { RagInteraction } from '../assistant/rag-interaction.entity';
 import { RagDocument } from '../assistant/rag-document.entity';
 import { BatchHealthEvent } from '../batches/batch-health-event.entity';
@@ -27,6 +30,9 @@ const dataSource = new DataSource({
     BatchHealthEvent,
     BatchProjection,
     DietRun,
+    AssistantSession,
+    AssistantMessage,
+    AssistantToolCall,
     RagInteraction,
     RagDocument,
   ],

@@ -177,6 +177,117 @@ class AskResponse(BaseModel):
     safetyFlags: list[str] = Field(default_factory=list)
 
 
+AgentMode = Literal["AUTO", "WHY", "WHAT_IF", "NEXT_BEST_ACTION"]
+
+
+class CitationEvidence(BaseModel):
+    sourceId: str
+    chunkId: str
+    sourceTitle: str
+    snippet: str
+    offsetStart: int = Field(ge=0)
+    offsetEnd: int = Field(ge=0)
+    score: float
+    metadata: dict[str, str | float | int | bool | None] = Field(default_factory=dict)
+
+
+class ToolCallRecord(BaseModel):
+    toolName: str
+    status: Literal["SUCCESS", "ERROR", "SKIPPED"]
+    latencyMs: int = Field(ge=0)
+    input: dict[str, object] = Field(default_factory=dict)
+    output: dict[str, object] = Field(default_factory=dict)
+
+
+class SimulationDiff(BaseModel):
+    costDeltaMxnPerHeadDay: float
+    feasibleBefore: bool
+    feasibleAfter: bool
+    hardConstraintDelta: int
+    riskFlags: list[str] = Field(default_factory=list)
+
+
+class AgentContext(BaseModel):
+    dietRunId: str | None = None
+    batchId: str | None = None
+    animalProfile: AnimalProfileInput | None = None
+    currentMix: list[MixItem] = Field(default_factory=list)
+    constraintsReport: list[ConstraintReportItem] = Field(default_factory=list)
+    totalCostMxnPerHeadDay: float | None = None
+    ingredients: list[IngredientInput] = Field(default_factory=list)
+    batchContext: BatchContextInput | None = None
+    projection: ProjectionResponse | None = None
+    salePriceMxnPerKg: float | None = None
+    purchasePriceMxnPerKg: float | None = None
+
+
+class AgentRespondRequest(BaseModel):
+    sessionId: str = Field(min_length=1)
+    message: str = Field(min_length=1)
+    mode: AgentMode = "AUTO"
+    context: AgentContext
+    options: dict = Field(default_factory=dict)
+
+
+class AgentRespondResponse(BaseModel):
+    mode: Literal["WHY", "WHAT_IF", "NEXT_BEST_ACTION"]
+    answer: str
+    citations: list[CitationEvidence]
+    safetyFlags: list[str] = Field(default_factory=list)
+    toolCalls: list[ToolCallRecord] = Field(default_factory=list)
+    simulationDiff: SimulationDiff | None = None
+    confidence: Literal["LOW", "MEDIUM", "HIGH"]
+
+
+class RagRetrieveRequest(BaseModel):
+    question: str = Field(min_length=1)
+    topK: int = Field(default=5, ge=1, le=20)
+    filters: dict[str, str] = Field(default_factory=dict)
+
+
+class RagChunkResult(BaseModel):
+    sourceId: str
+    chunkId: str
+    sourceTitle: str
+    snippet: str
+    scoreVector: float
+    scoreLexical: float
+    scoreHybrid: float
+    metadata: dict[str, str | float | int | bool | None] = Field(default_factory=dict)
+
+
+class RagRetrieveResponse(BaseModel):
+    question: str
+    chunks: list[RagChunkResult]
+
+
+class RagEvalScenario(BaseModel):
+    id: str = Field(min_length=1)
+    question: str = Field(min_length=1)
+    requiresCitation: bool = True
+    expectedKeywords: list[str] = Field(default_factory=list)
+
+
+class RagEvaluateRequest(BaseModel):
+    runName: str = Field(min_length=1)
+    scenarios: list[RagEvalScenario] = Field(default_factory=list)
+
+
+class RagEvalRow(BaseModel):
+    id: str
+    retrieved: int
+    hasCitation: bool
+    grounded: bool
+    leakedNumeric: bool
+    topSourceTitle: str | None
+
+
+class RagEvaluateResponse(BaseModel):
+    runName: str
+    summary: dict[str, float | int]
+    rows: list[RagEvalRow]
+
+
 class RagDocumentInput(BaseModel):
     title: str = Field(min_length=1)
     content: str = Field(min_length=1)

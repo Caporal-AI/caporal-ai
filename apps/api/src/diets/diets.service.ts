@@ -19,6 +19,8 @@ import { GenerateDietDto } from './dto/generate-diet.dto';
 
 @Injectable()
 export class DietsService {
+  private readonly defaultLocationCode = 'MX-NL';
+
   constructor(
     @InjectRepository(DietRun)
     private readonly dietRunRepository: Repository<DietRun>,
@@ -68,10 +70,7 @@ export class DietsService {
     const ingredientInputs = [] as OptimizeRequest['ingredients'];
 
     for (const ingredient of ingredients) {
-      const latestPrice = await this.ingredientPriceRepository.findOne({
-        where: { ingredient: { id: ingredient.id } },
-        order: { effectiveDate: 'DESC', createdAt: 'DESC' },
-      });
+      const latestPrice = await this.findLatestPrice(ingredient.id);
 
       if (!latestPrice) {
         continue;
@@ -181,5 +180,19 @@ export class DietsService {
       order: { createdAt: 'DESC' },
       take: 20,
     });
+  }
+
+  private findLatestPrice(ingredientId: string): Promise<IngredientPrice | null> {
+    return this.ingredientPriceRepository
+      .createQueryBuilder('price')
+      .where('price.ingredient_id = :ingredientId', { ingredientId })
+      .andWhere('(price.location_code = :locationCode OR price.location_code IS NULL)', {
+        locationCode: this.defaultLocationCode,
+      })
+      .orderBy('CASE WHEN price.location_code = :locationCode THEN 0 ELSE 1 END', 'ASC')
+      .addOrderBy('price.created_at', 'DESC')
+      .addOrderBy('price.effective_date', 'DESC')
+      .setParameter('locationCode', this.defaultLocationCode)
+      .getOne();
   }
 }

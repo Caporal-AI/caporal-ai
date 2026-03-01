@@ -1,5 +1,9 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import type {
+  AgentMessage,
+  AgentMode,
+  AgentSession,
+  AgentTraceResponse,
   AnimalProfile,
   Batch,
   BatchHealthEvent,
@@ -38,6 +42,10 @@ export const caporalApi = createApi({
         body,
       }),
       invalidatesTags: ['Ingredient'],
+    }),
+    getIngredientPrices: builder.query<IngredientPrice[], string>({
+      query: (ingredientId) => `/ingredients/${ingredientId}/prices`,
+      providesTags: ['Ingredient'],
     }),
 
     getProfiles: builder.query<AnimalProfile[], void>({
@@ -174,11 +182,50 @@ export const caporalApi = createApi({
       query: (dietRunId) => `/assistant/diet-runs/${dietRunId}/interactions`,
       providesTags: ['Interaction'],
     }),
+
+    createAssistantSession: builder.mutation<
+      AgentSession,
+      { dietRunId?: string; batchId?: string; title?: string }
+    >({
+      query: (body) => ({
+        url: '/assistant/sessions',
+        method: 'POST',
+        body,
+      }),
+      invalidatesTags: ['Interaction'],
+    }),
+    sendAssistantSessionMessage: builder.mutation<
+      AgentMessage,
+      { sessionId: string; body: { message: string; mode?: AgentMode } }
+    >({
+      query: ({ sessionId, body }) => ({
+        url: `/assistant/sessions/${sessionId}/messages`,
+        method: 'POST',
+        body,
+      }),
+      invalidatesTags: ['Interaction'],
+    }),
+    simulateAssistantSession: builder.mutation<
+      AgentMessage,
+      { sessionId: string; body: { hypothesis: string } }
+    >({
+      query: ({ sessionId, body }) => ({
+        url: `/assistant/sessions/${sessionId}/simulate`,
+        method: 'POST',
+        body,
+      }),
+      invalidatesTags: ['Interaction'],
+    }),
+    getAssistantSessionTrace: builder.query<AgentTraceResponse, string>({
+      query: (sessionId) => `/assistant/sessions/${sessionId}/trace`,
+      providesTags: ['Interaction'],
+    }),
   }),
 });
 
 export const {
   useGetIngredientsQuery,
+  useGetIngredientPricesQuery,
   useUpdateIngredientMutation,
   usePostPriceMutation,
   useGetProfilesQuery,
@@ -195,4 +242,8 @@ export const {
   useGetBatchSellSignalQuery,
   useAskAssistantMutation,
   useGetInteractionsQuery,
+  useCreateAssistantSessionMutation,
+  useSendAssistantSessionMessageMutation,
+  useSimulateAssistantSessionMutation,
+  useGetAssistantSessionTraceQuery,
 } = caporalApi;

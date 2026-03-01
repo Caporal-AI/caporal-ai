@@ -1,0 +1,78 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://caporal.ai/schemas/projection-request.schema.json",
+  "title": "ProjectionRequest",
+  "type": "object",
+  "required": [
+    "batchContext",
+    "horizonDays",
+    "dietCostMxnPerHeadDay",
+    "salePriceMxnPerKg",
+    "purchasePriceMxnPerKg",
+    "historicalWeighIns",
+    "dietMix"
+  ],
+  "properties": {
+    "batchContext": {
+      "type": "object",
+      "required": [
+        "batchId",
+        "breed",
+        "headCount",
+        "currentAverageWeightKg",
+        "targetSaleWeightKg",
+        "daysOnFeed"
+      ],
+      "properties": {
+        "batchId": { "type": "string" },
+        "breed": { "type": "string" },
+        "headCount": { "type": "integer", "minimum": 1 },
+        "currentAverageWeightKg": { "type": "number", "exclusiveMinimum": 0 },
+        "targetSaleWeightKg": { "type": "number", "exclusiveMinimum": 0 },
+        "daysOnFeed": { "type": "integer", "minimum": 0 },
+        "climate": {
+          "type": "object",
+          "required": ["avgTemperatureC", "humidityPct"],
+          "properties": {
+            "avgTemperatureC": { "type": "number" },
+            "humidityPct": { "type": "number", "minimum": 0, "maximum": 100 }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "horizonDays": { "type": "integer", "minimum": 7, "maximum": 180 },
+    "dietCostMxnPerHeadDay": { "type": "number", "minimum": 0 },
+    "salePriceMxnPerKg": { "type": "number", "exclusiveMinimum": 0 },
+    "purchasePriceMxnPerKg": { "type": "number", "exclusiveMinimum": 0 },
+    "otherCostMxnPerHead": { "type": "number", "minimum": 0 },
+    "historicalWeighIns": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["measuredAt", "averageWeightKg"],
+        "properties": {
+          "measuredAt": { "type": "string", "format": "date" },
+          "averageWeightKg": { "type": "number", "exclusiveMinimum": 0 }
+        },
+        "additionalProperties": false
+      }
+    },
+    "dietMix": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["ingredientId", "kgAsFedPerHeadDay", "kgDmPerHeadDay", "pctDm"],
+        "properties": {
+          "ingredientId": { "type": "string" },
+          "kgAsFedPerHeadDay": { "type": "number" },
+          "kgDmPerHeadDay": { "type": "number" },
+          "pctDm": { "type": "number" }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

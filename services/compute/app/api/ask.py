@@ -3,7 +3,7 @@ from __future__ import annotations
 from fastapi import APIRouter
 
 from app.core.assistant import classify_safety_flags, generate_answer
-from app.core.rag_store import retrieve_similar_documents, upsert_documents
+from app.core.rag_store import retrieve_enriched_chunks, upsert_documents
 from app.models.contracts import AskRequest, AskResponse, Citation, RagDocumentInput
 
 router = APIRouter()
@@ -15,16 +15,16 @@ def ask(payload: AskRequest) -> AskResponse:
     top_k = int(top_k_raw) if isinstance(top_k_raw, (int, float, str)) else 3
 
     try:
-        docs = retrieve_similar_documents(payload.question, top_k)
+        docs = retrieve_enriched_chunks(payload.question, top_k=top_k, filters={})
     except Exception:
         docs = []
 
     citations = [
         Citation(
-            docId=item.doc_id,
-            title=item.title,
+            docId=item.chunk_id,
+            title=item.source_title,
             snippet=item.snippet,
-            score=round(item.score, 6),
+            score=round(item.score_hybrid, 6),
         )
         for item in docs
     ]
