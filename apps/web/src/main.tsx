@@ -1,91 +1,41 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import ReactDOM from 'react-dom/client';
-import { CssBaseline, ThemeProvider, createTheme } from '@mui/material';
-import { esES } from '@mui/material/locale';
+import { CssBaseline, ThemeProvider } from '@mui/material';
 import { Provider } from 'react-redux';
+import { BrowserRouter } from 'react-router-dom';
 import { App } from './App';
+import { createAppTheme } from './assets/theme';
+import './i18n';
+import { useAppSelector } from './store/hooks';
 import { store } from './store';
 
-const theme = createTheme(
-  {
-    palette: {
-      mode: 'dark',
-      primary: {
-        main: '#4ce0b3',
-      },
-      secondary: {
-        main: '#f4b45f',
-      },
-      background: {
-        default: '#0b1117',
-        paper: '#131b23',
-      },
-      text: {
-        primary: '#ecf3fb',
-        secondary: '#9cb0c5',
-      },
-      success: {
-        main: '#6be69e',
-      },
-      warning: {
-        main: '#f4b45f',
-      },
-      error: {
-        main: '#ff6d7a',
-      },
-    },
-    typography: {
-      fontFamily: '"Space Grotesk", "IBM Plex Sans", "Segoe UI", sans-serif',
-      h3: {
-        letterSpacing: '-0.03em',
-        fontWeight: 800,
-      },
-      h4: {
-        letterSpacing: '-0.02em',
-        fontWeight: 700,
-      },
-    },
-    shape: {
-      borderRadius: 14,
-    },
-    components: {
-      MuiPaper: {
-        styleOverrides: {
-          root: {
-            backgroundImage: 'none',
-            border: '1px solid rgba(156,176,197,0.16)',
-          },
-        },
-      },
-      MuiTab: {
-        styleOverrides: {
-          root: {
-            textTransform: 'none',
-            fontWeight: 600,
-            fontSize: '0.95rem',
-          },
-        },
-      },
-      MuiButton: {
-        styleOverrides: {
-          root: {
-            textTransform: 'none',
-            fontWeight: 700,
-          },
-        },
-      },
-    },
-  },
-  esES,
-);
+function ThemedApplication(): JSX.Element {
+  const uiDensity = useAppSelector((state) => state.preferences.uiDensity);
+  const colorMode = useAppSelector((state) => state.preferences.colorMode);
+
+  const theme = useMemo(
+    () =>
+      createAppTheme({
+        uiDensity,
+        colorMode,
+      }),
+    [colorMode, uiDensity],
+  );
+
+  return (
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </ThemeProvider>
+  );
+}
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <Provider store={store}>
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <App />
-      </ThemeProvider>
+      <ThemedApplication />
     </Provider>
   </React.StrictMode>,
 );

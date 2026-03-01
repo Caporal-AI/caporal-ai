@@ -14,7 +14,7 @@ import type {
   IngredientPrice,
   RagInteraction,
   SellSignal,
-} from '../types';
+} from '../../types';
 
 export const caporalApi = createApi({
   reducerPath: 'caporalApi',

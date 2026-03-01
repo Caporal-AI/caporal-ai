@@ -1,9 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { setupListeners } from '@reduxjs/toolkit/query';
-import { caporalApi } from './api/caporalApi';
+import { preferencesReducer } from './slices/preferencesSlice';
+import { uiReducer } from './slices/uiSlice';
+import { caporalApi } from './services/caporalApi';
 
 export const store = configureStore({
   reducer: {
+    preferences: preferencesReducer,
+    ui: uiReducer,
     [caporalApi.reducerPath]: caporalApi.reducer,
   },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(caporalApi.middleware),
