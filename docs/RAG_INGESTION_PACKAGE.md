@@ -14,6 +14,12 @@ Objetivo: dejar una ruta reproducible para cargar conocimiento tecnico al RAG, m
    Ingesta por lotes + reindex al final.
 5. `scripts/rag/run_baseline_eval.sh`  
    Ejecuta benchmark baseline y guarda reporte versionado.
+6. `scripts/rag/run_guardrail_redteam.sh`
+   Ejecuta evaluacion red-team de guardrails y grounding.
+7. `scripts/rag/run_mandatory_cases.sh`
+   Ejecuta casos obligatorios: guardrail legacy, infeasible solver y regresion de endpoints clave.
+8. `scripts/rag/run_quality_harness.sh`
+   Orquesta baseline + red-team + casos obligatorios en un solo run.
 
 ## 2) Contrato de documento para ingesta
 
@@ -47,6 +53,19 @@ timeout 180 scripts/rag/ingest_jsonl.sh data/rag/corpus_batch_001.jsonl 25
 
 ```bash
 timeout 120 scripts/rag/run_baseline_eval.sh data/rag/eval_baseline_scenarios.json
+```
+
+### Paso D: correr red-team de seguridad
+
+```bash
+timeout 120 scripts/rag/run_guardrail_redteam.sh data/rag/eval_guardrail_redteam_scenarios.json
+```
+
+### Paso E: correr casos obligatorios y harness completo
+
+```bash
+timeout 120 scripts/rag/run_mandatory_cases.sh
+timeout 180 scripts/rag/run_quality_harness.sh
 ```
 
 El script guarda resultados en `data/rag/reports/<run-name>.json`.

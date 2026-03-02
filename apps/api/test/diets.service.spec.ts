@@ -9,6 +9,16 @@ describe('DietsService', () => {
     find: jest.fn(),
     create: jest.fn(),
     save: jest.fn(),
+    createQueryBuilder: jest.fn(),
+  });
+
+  const makePriceQueryBuilder = () => ({
+    where: jest.fn().mockReturnThis(),
+    andWhere: jest.fn().mockReturnThis(),
+    orderBy: jest.fn().mockReturnThis(),
+    addOrderBy: jest.fn().mockReturnThis(),
+    setParameter: jest.fn().mockReturnThis(),
+    getOne: jest.fn().mockResolvedValue({ priceMxnPerKgAsFed: 6.2 }),
   });
 
   it('persists snapshots when diet generation succeeds', async () => {
@@ -66,7 +76,7 @@ describe('DietsService', () => {
       },
     ]);
 
-    ingredientPriceRepository.findOne.mockResolvedValue({ priceMxnPerKgAsFed: 6.2 });
+    ingredientPriceRepository.createQueryBuilder.mockReturnValue(makePriceQueryBuilder());
 
     dietRunRepository.create.mockImplementation((payload: Record<string, unknown>) => payload);
     dietRunRepository.save.mockImplementation(async (payload: Record<string, unknown>) => ({ id: 'run-1', ...payload }));
@@ -127,7 +137,7 @@ describe('DietsService', () => {
       },
     ]);
 
-    ingredientPriceRepository.findOne.mockResolvedValue({ priceMxnPerKgAsFed: 6.2 });
+    ingredientPriceRepository.createQueryBuilder.mockReturnValue(makePriceQueryBuilder());
 
     dietRunRepository.create.mockImplementation((payload: Record<string, unknown>) => payload);
     dietRunRepository.save.mockImplementation(async (payload: Record<string, unknown>) => ({ id: 'run-2', ...payload }));

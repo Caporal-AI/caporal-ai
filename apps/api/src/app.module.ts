@@ -23,6 +23,8 @@ import { IngredientPrice } from './ingredients/ingredient-price.entity';
 import { HealthModule } from './health/health.module';
 import { IngredientsModule } from './ingredients/ingredients.module';
 import { MetricsModule } from './metrics/metrics.module';
+import { OperationsModule } from './operations/operations.module';
+import { RagEvalRun } from './operations/rag-eval-run.entity';
 import { SeedModule } from './seed/seed.module';
 
 @Module({
@@ -57,6 +59,7 @@ import { SeedModule } from './seed/seed.module';
           AssistantToolCall,
           RagInteraction,
           RagDocument,
+          RagEvalRun,
         ],
         synchronize: false,
       }),
@@ -68,6 +71,7 @@ import { SeedModule } from './seed/seed.module';
     BatchesModule,
     AssistantModule,
     MetricsModule,
+    OperationsModule,
     SeedModule,
   ],
   providers: [

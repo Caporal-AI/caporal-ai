@@ -194,7 +194,6 @@ const MobileFooterInner = styled(SectionCard)`
 
 const MobileFooterGrid = styled(Box)`
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
   align-items: stretch;
   gap: 0.28rem;
   min-height: 4.75rem;
@@ -411,8 +410,12 @@ export function AppShell({
       {!isDesktop ? (
         <MobileFooter>
           <MobileFooterInner>
-            <MobileFooterGrid>
-              {navItems.slice(0, 3).map((item) => {
+            <MobileFooterGrid
+              style={{
+                gridTemplateColumns: `repeat(${Math.min(navItems.length, 4) + 1}, minmax(0, 1fr))`,
+              }}
+            >
+              {navItems.slice(0, 4).map((item) => {
                 const selected = activePath.startsWith(item.path);
                 return (
                   <MobileNavButton

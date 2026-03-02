@@ -12,8 +12,11 @@ import type {
   DietRun,
   Ingredient,
   IngredientPrice,
+  OperationsDashboard,
   RagInteraction,
+  RagEvalRunItem,
   SellSignal,
+  SmokeValidationResult,
 } from '../../types';
 
 export const caporalApi = createApi({
@@ -21,7 +24,7 @@ export const caporalApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: import.meta.env.VITE_API_BASE_URL ?? '/api',
   }),
-  tagTypes: ['Ingredient', 'Profile', 'DietRun', 'Interaction', 'Batch', 'Projection'],
+  tagTypes: ['Ingredient', 'Profile', 'DietRun', 'Interaction', 'Batch', 'Projection', 'Operations'],
   endpoints: (builder) => ({
     getIngredients: builder.query<Ingredient[], void>({
       query: () => '/ingredients',
@@ -220,6 +223,36 @@ export const caporalApi = createApi({
       query: (sessionId) => `/assistant/sessions/${sessionId}/trace`,
       providesTags: ['Interaction'],
     }),
+
+    getOperationsDashboard: builder.query<OperationsDashboard, { limit?: number } | void>({
+      query: (args) => {
+        const params = new URLSearchParams();
+        if (args?.limit) {
+          params.set('limit', String(args.limit));
+        }
+        const suffix = params.toString() ? `?${params.toString()}` : '';
+        return `/operations/dashboard${suffix}`;
+      },
+      providesTags: ['Operations'],
+    }),
+    getOperationsRagEvals: builder.query<RagEvalRunItem[], { limit?: number } | void>({
+      query: (args) => {
+        const params = new URLSearchParams();
+        if (args?.limit) {
+          params.set('limit', String(args.limit));
+        }
+        const suffix = params.toString() ? `?${params.toString()}` : '';
+        return `/operations/rag-evals${suffix}`;
+      },
+      providesTags: ['Operations'],
+    }),
+    runOperationsSmokeValidation: builder.mutation<SmokeValidationResult, void>({
+      query: () => ({
+        url: '/operations/validate-smoke',
+        method: 'POST',
+      }),
+      invalidatesTags: ['Operations'],
+    }),
   }),
 });
 
@@ -246,4 +279,7 @@ export const {
   useSendAssistantSessionMessageMutation,
   useSimulateAssistantSessionMutation,
   useGetAssistantSessionTraceQuery,
+  useGetOperationsDashboardQuery,
+  useGetOperationsRagEvalsQuery,
+  useRunOperationsSmokeValidationMutation,
 } = caporalApi;

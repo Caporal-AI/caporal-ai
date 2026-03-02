@@ -10,6 +10,7 @@ import { AssistantPanelContainer } from '../../assistant/containers/AssistantPan
 import { BatchWorkflowContainer } from '../../batches/containers/BatchWorkflowContainer';
 import { GenerateDietContainer } from '../../diet/containers/GenerateDietContainer';
 import { IngredientsContainer } from '../../ingredients/containers/IngredientsContainer';
+import { OperationsContainer } from '../../operations/containers/OperationsContainer';
 import { appSections } from '../navigation';
 
 export function AppShellContainer(): JSX.Element {
@@ -96,6 +97,7 @@ export function AppShellContainer(): JSX.Element {
           />
           <Route path="/lotes-plan" element={<BatchWorkflowContainer />} />
           <Route path="/dieta-simple" element={<GenerateDietContainer />} />
+          <Route path="/operaciones" element={<OperationsContainer />} />
           <Route path="/" element={<Navigate to="/ingredientes" replace />} />
           <Route path="*" element={<Navigate to="/ingredientes" replace />} />
         </Routes>

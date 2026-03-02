@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from concurrent.futures import ThreadPoolExecutor, TimeoutError as FuturesTimeoutError
 from dataclasses import dataclass
 import re
 import time
@@ -39,6 +40,16 @@ _NUMERIC_CHANGE_PATTERN = re.compile(
     re.IGNORECASE,
 )
 
+_DIRECT_DOSING_PATTERN = re.compile(
+    r"\b(dosis|dosific|kg\b|kilogramos?|gramos?|porcentaje exacto|inclusion exacta)\b",
+    re.IGNORECASE,
+)
+_BYPASS_SOLVER_PATTERN = re.compile(r"\b(sin solver|sin recalcular|directo en campo)\b", re.IGNORECASE)
+
+_RETRIEVE_TIMEOUT_SEC = 2.2
+_SIMULATE_TIMEOUT_SEC = 3.2
+_PROJECTION_TIMEOUT_SEC = 2.8
+
 
 @dataclass
 class _ToolOutcome:
@@ -54,11 +65,15 @@ def respond_agent(payload: AgentRespondRequest) -> AgentRespondResponse:
 
     safety_flags: list[str] = []
     tool_calls: list[ToolCallRecord] = []
+    block_numeric_request = _should_block_numeric_request(payload.message, mode)
+    if block_numeric_request:
+        safety_flags.append("UNSAFE_REQUEST_BLOCKED")
 
     retrieval_result = _run_tool(
         tool_name="rag.retrieve",
         fn=lambda: _retrieve(payload.message, top_k),
         tool_input={"question": payload.message, "topK": top_k},
+        timeout_sec=_RETRIEVE_TIMEOUT_SEC,
     )
     tool_calls.append(retrieval_result.record)
     chunks = _extract_chunks(retrieval_result.payload)
@@ -69,13 +84,16 @@ def respond_agent(payload: AgentRespondRequest) -> AgentRespondResponse:
     projection_payload: dict[str, object] | None = None
 
     if mode == "WHAT_IF" and len(tool_calls) < max_tool_calls:
+        if block_numeric_request:
+            safety_flags.append("NEEDS_MORE_INPUT")
         if not payload.context.animalProfile or not payload.context.ingredients:
             safety_flags.append("NEEDS_MORE_INPUT")
-        else:
+        elif not block_numeric_request:
             simulation = _run_tool(
                 tool_name="solver.simulate",
                 fn=lambda: _simulate_what_if(payload),
                 tool_input={"message": payload.message},
+                timeout_sec=_SIMULATE_TIMEOUT_SEC,
             )
             tool_calls.append(simulation.record)
             if simulation.payload.get("simulationDiff") is not None:
@@ -90,6 +108,7 @@ def respond_agent(payload: AgentRespondRequest) -> AgentRespondResponse:
             tool_name="projection.next_action",
             fn=lambda: _project_for_next_action(payload),
             tool_input={"batchId": payload.context.batchId},
+            timeout_sec=_PROJECTION_TIMEOUT_SEC,
         )
         tool_calls.append(projection.record)
         projection_payload = projection.payload
@@ -148,10 +167,11 @@ def _run_tool(
     tool_name: str,
     fn,
     tool_input: dict[str, object],
+    timeout_sec: float | None = None,
 ) -> _ToolOutcome:
     started_at = time.perf_counter()
     try:
-        output = fn()
+        output = _execute_with_timeout(fn=fn, timeout_sec=timeout_sec)
         latency_ms = max(0, int((time.perf_counter() - started_at) * 1000))
         return _ToolOutcome(
             record=ToolCallRecord(
@@ -162,6 +182,23 @@ def _run_tool(
                 output=output if isinstance(output, dict) else {"value": str(output)},
             ),
             payload=output if isinstance(output, dict) else {"value": str(output)},
+        )
+    except FuturesTimeoutError:
+        latency_ms = max(0, int((time.perf_counter() - started_at) * 1000))
+        timeout_label = f"{timeout_sec:.1f}s" if timeout_sec is not None else "n/a"
+        payload = {
+            "error": f"Tool '{tool_name}' timed out after {timeout_label}.",
+            "timeoutSec": timeout_sec,
+        }
+        return _ToolOutcome(
+            record=ToolCallRecord(
+                toolName=tool_name,
+                status="ERROR",
+                latencyMs=latency_ms,
+                input=tool_input,
+                output=payload,
+            ),
+            payload=payload,
         )
     except Exception as exc:
         latency_ms = max(0, int((time.perf_counter() - started_at) * 1000))
@@ -176,6 +213,31 @@ def _run_tool(
             ),
             payload=payload,
         )
+
+
+def _execute_with_timeout(*, fn, timeout_sec: float | None):
+    if timeout_sec is None:
+        return fn()
+
+    with ThreadPoolExecutor(max_workers=1) as executor:
+        future = executor.submit(fn)
+        return future.result(timeout=timeout_sec)
+
+
+def _should_block_numeric_request(message: str, mode: str) -> bool:
+    lowered = message.lower()
+    if _BYPASS_SOLVER_PATTERN.search(lowered):
+        return True
+
+    has_direct_dose_request = _DIRECT_DOSING_PATTERN.search(lowered) is not None
+    if not has_direct_dose_request:
+        return False
+
+    if mode == "WHAT_IF":
+        # WHAT_IF remains allowed only when it is explicitly quantized for solver simulation.
+        return _NUMERIC_CHANGE_PATTERN.search(lowered) is None
+
+    return True
 
 
 def _retrieve(question: str, top_k: int) -> dict[str, object]:

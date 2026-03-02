@@ -283,3 +283,52 @@ export interface AgentTraceResponse {
   messages: AgentMessage[];
   toolCalls: AgentTraceStep[];
 }
+
+export interface MetricsSnapshot {
+  feasible_rate: number;
+  hard_constraints_violations: number;
+  rag_guardrail_triggers: number;
+  agent_tool_success_rate: number;
+  what_if_completion_rate: number;
+  p95_latency_api_ms: number;
+  p95_latency_compute_ms: number;
+  p95_latency_projection_ms: number;
+  diet_runs_total: number;
+  projection_calls_total: number;
+}
+
+export interface RagEvalSummary {
+  totalScenarios: number;
+  citationCoverageTechnical: number;
+  groundedResponseRate: number;
+  unsafeNumericLeakageRate: number;
+}
+
+export interface RagEvalRunItem {
+  id: string;
+  runName: string;
+  createdAt: string;
+  summary: RagEvalSummary | null;
+}
+
+export interface OperationsDashboard {
+  generatedAt: string;
+  metrics: MetricsSnapshot;
+  latestRuns: RagEvalRunItem[];
+}
+
+export interface OperationCheck {
+  ok: boolean;
+  detail: Record<string, unknown>;
+}
+
+export interface SmokeValidationResult {
+  runName: string;
+  executedAt: string;
+  passed: boolean;
+  checks: {
+    computeHealth: OperationCheck;
+    ragEvaluate: OperationCheck;
+    agentGuardrail: OperationCheck;
+  };
+}
