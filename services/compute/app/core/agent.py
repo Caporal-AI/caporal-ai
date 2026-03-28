@@ -62,6 +62,7 @@ def respond_agent(payload: AgentRespondRequest) -> AgentRespondResponse:
     options = payload.options or {}
     top_k = int(options.get("topK", 4))
     max_tool_calls = max(1, min(int(options.get("maxToolCalls", 3)), 5))
+    llm_mode = str(options.get("llmMode", "AUTO")).upper()
 
     safety_flags: list[str] = []
     tool_calls: list[ToolCallRecord] = []
@@ -135,6 +136,7 @@ def respond_agent(payload: AgentRespondRequest) -> AgentRespondResponse:
         user_message=payload.message,
         base_answer=answer,
         citations=[item.model_dump() for item in citations],
+        llm_mode=llm_mode,
     )
 
     confidence = _estimate_confidence(citations, safety_flags)

@@ -39,6 +39,7 @@ interface AssistantPanelViewProps {
   actionDisabled: boolean;
   isLoading: boolean;
   modeHelper: string;
+  llmMode: 'AUTO' | 'OPENAI' | 'LOCAL' | 'OFF';
   suggestions: string[];
   errors: string[];
   whatIfWarning: string | null;
@@ -48,6 +49,7 @@ interface AssistantPanelViewProps {
   latestMessage: AgentMessage | null;
   toolCalls: AgentTraceStep[];
   onModeChange: (mode: AgentMode) => void;
+  onLlmModeChange: (mode: 'AUTO' | 'OPENAI' | 'LOCAL' | 'OFF') => void;
   onQuestionChange: (value: string) => void;
   onSuggestionClick: (value: string) => void;
   onSubmit: () => void;
@@ -144,6 +146,7 @@ export function AssistantPanelView({
   actionDisabled,
   isLoading,
   modeHelper,
+  llmMode,
   suggestions,
   errors,
   whatIfWarning,
@@ -153,6 +156,7 @@ export function AssistantPanelView({
   latestMessage,
   toolCalls,
   onModeChange,
+  onLlmModeChange,
   onQuestionChange,
   onSuggestionClick,
   onSubmit,
@@ -220,6 +224,34 @@ export function AssistantPanelView({
           <Typography variant="body2" color="text.secondary">
             {modeHelper}
           </Typography>
+
+          <ToggleButtonGroup
+            value={llmMode}
+            exclusive
+            onChange={(_, value: 'AUTO' | 'OPENAI' | 'LOCAL' | 'OFF' | null) => {
+              if (value) {
+                onLlmModeChange(value);
+              }
+            }}
+            size="small"
+            sx={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(4, minmax(0, 1fr))',
+              gap: 0.45,
+              '.MuiToggleButtonGroup-grouped': {
+                borderRadius: '999px !important',
+                border: '1px solid rgba(108, 82, 57, 0.3) !important',
+                textTransform: 'none',
+                fontWeight: 700,
+                px: 0.3,
+              },
+            }}
+          >
+            <ToggleButton value="AUTO">Auto</ToggleButton>
+            <ToggleButton value="OPENAI">OpenAI</ToggleButton>
+            <ToggleButton value="LOCAL">Local</ToggleButton>
+            <ToggleButton value="OFF">Off</ToggleButton>
+          </ToggleButtonGroup>
 
           <SuggestionsWrap>
             {suggestions.map((suggestion) => (

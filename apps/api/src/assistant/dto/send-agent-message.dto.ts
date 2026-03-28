@@ -8,4 +8,8 @@ export class SendAgentMessageDto {
   @IsOptional()
   @IsIn(['AUTO', 'WHY', 'WHAT_IF', 'NEXT_BEST_ACTION'])
   mode?: 'AUTO' | 'WHY' | 'WHAT_IF' | 'NEXT_BEST_ACTION';
+
+  @IsOptional()
+  @IsIn(['AUTO', 'OPENAI', 'LOCAL', 'OFF'])
+  llmMode?: 'AUTO' | 'OPENAI' | 'LOCAL' | 'OFF';
 }

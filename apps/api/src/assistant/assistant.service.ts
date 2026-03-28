@@ -134,6 +134,7 @@ export class AssistantService {
       options: {
         topK: 5,
         maxToolCalls: 3,
+        llmMode: dto.llmMode ?? 'AUTO',
       },
     };
 
@@ -206,6 +207,7 @@ export class AssistantService {
       {
         message: dto.hypothesis,
         mode: 'WHAT_IF',
+        llmMode: dto.llmMode ?? 'AUTO',
       },
       correlationId,
     );

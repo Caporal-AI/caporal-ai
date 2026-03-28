@@ -31,6 +31,46 @@ Incluye flujo extendido de lotes:
 docker compose -f infra/docker-compose.yml up --build -d
 ```
 
+### Configurar LLM (OpenAI o local)
+
+El servicio `compute` acepta ambos modos:
+
+1. OpenAI oficial:
+
+```bash
+export OPENAI_API_KEY="<tu_api_key>"
+export OPENAI_MODEL="gpt-4o-mini"
+unset OPENAI_BASE_URL
+```
+
+2. Modelo local OpenAI-compatible (LM Studio/vLLM/Ollama-compatible):
+
+```bash
+export OPENAI_BASE_URL="http://host.docker.internal:1234/v1"
+export OPENAI_MODEL="<tu_modelo_local>"
+export OPENAI_API_KEY="local-dev"
+```
+
+Opcional (separar modelos OpenAI vs local para alternar desde UI):
+
+```bash
+export LOCAL_LLM_BASE_URL="http://host.docker.internal:1234/v1"
+export LOCAL_LLM_MODEL="<tu_modelo_local>"
+export LOCAL_LLM_API_KEY="local-dev"
+```
+
+Luego reinicia `compute`:
+
+```bash
+docker compose -f infra/docker-compose.yml up -d --build compute
+```
+
+Notas:
+
+- Si el backend local no soporta `responses`, el sistema cae a `chat.completions`.
+- Si no hay `OPENAI_API_KEY` y no hay `OPENAI_BASE_URL`, usa fallback determinista (sin LLM).
+- En el panel del asistente puedes elegir por mensaje: `Auto`, `OpenAI`, `Local` u `Off`.
+
 Servicios:
 
 - Postgres (host): `localhost:5433`

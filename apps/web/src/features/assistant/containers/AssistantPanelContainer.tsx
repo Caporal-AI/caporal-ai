@@ -6,7 +6,7 @@ import {
   useSendAssistantSessionMessageMutation,
   useSimulateAssistantSessionMutation,
 } from '../../../store/services/caporalApi';
-import type { AgentMode } from '../../../types';
+import type { AgentMode, LlmMode } from '../../../types';
 import { useAppDispatch, useAppSelector } from '../../../store/hooks';
 import { consumeAssistantPrompt } from '../../../store/slices/uiSlice';
 import { AssistantPanelView, type AssistantModeOption } from '../components/AssistantPanelView';
@@ -43,6 +43,7 @@ export function AssistantPanelContainer({
 
   const [question, setQuestion] = useState('');
   const [mode, setMode] = useState<AgentMode>('AUTO');
+  const [llmMode, setLlmMode] = useState<LlmMode>('AUTO');
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [autoSessionAttemptFor, setAutoSessionAttemptFor] = useState<string | null>(null);
 
@@ -59,6 +60,7 @@ export function AssistantPanelContainer({
     setSessionId(null);
     setQuestion('');
     setMode('AUTO');
+    setLlmMode('AUTO');
     setAutoSessionAttemptFor(null);
   }, [dietRunId]);
 
@@ -124,6 +126,7 @@ export function AssistantPanelContainer({
         sessionId,
         body: {
           hypothesis: question.trim(),
+          llmMode,
         },
       }).unwrap();
     } else {
@@ -132,6 +135,7 @@ export function AssistantPanelContainer({
         body: {
           message: question.trim(),
           mode,
+          llmMode,
         },
       }).unwrap();
     }
@@ -185,6 +189,7 @@ export function AssistantPanelContainer({
       actionDisabled={submitDisabled}
       isLoading={createState.isLoading || sendState.isLoading || simulateState.isLoading || traceLoading}
       modeHelper={selectedMode.helper}
+      llmMode={llmMode}
       suggestions={modeSuggestions[mode]}
       errors={errors}
       whatIfWarning={
@@ -198,6 +203,7 @@ export function AssistantPanelContainer({
       latestMessage={latestMessage}
       toolCalls={trace?.toolCalls ?? []}
       onModeChange={setMode}
+      onLlmModeChange={setLlmMode}
       onQuestionChange={setQuestion}
       onSuggestionClick={setQuestion}
       onSubmit={() => {

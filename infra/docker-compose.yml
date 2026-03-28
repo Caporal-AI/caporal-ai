@@ -22,14 +22,14 @@ services:
       context: ../services/compute
       dockerfile: Dockerfile
     container_name: caporal-compute
+    env_file:
+      - ../.env
     environment:
       DB_HOST: postgres
       DB_PORT: 5432
       DB_USER: caporal
       DB_PASSWORD: caporal
       DB_NAME: caporal
-      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
-      OPENAI_MODEL: ${OPENAI_MODEL:-gpt-4o-mini}
     depends_on:
       postgres:
         condition: service_healthy

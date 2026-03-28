@@ -225,6 +225,7 @@ export interface RagInteraction {
 }
 
 export type AgentMode = 'AUTO' | 'WHY' | 'WHAT_IF' | 'NEXT_BEST_ACTION';
+export type LlmMode = 'AUTO' | 'OPENAI' | 'LOCAL' | 'OFF';
 
 export interface CitationEvidence {
   sourceId: string;

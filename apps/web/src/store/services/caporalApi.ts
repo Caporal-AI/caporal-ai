@@ -2,6 +2,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import type {
   AgentMessage,
   AgentMode,
+  LlmMode,
   AgentSession,
   AgentTraceResponse,
   AnimalProfile,
@@ -199,7 +200,7 @@ export const caporalApi = createApi({
     }),
     sendAssistantSessionMessage: builder.mutation<
       AgentMessage,
-      { sessionId: string; body: { message: string; mode?: AgentMode } }
+      { sessionId: string; body: { message: string; mode?: AgentMode; llmMode?: LlmMode } }
     >({
       query: ({ sessionId, body }) => ({
         url: `/assistant/sessions/${sessionId}/messages`,
@@ -210,7 +211,7 @@ export const caporalApi = createApi({
     }),
     simulateAssistantSession: builder.mutation<
       AgentMessage,
-      { sessionId: string; body: { hypothesis: string } }
+      { sessionId: string; body: { hypothesis: string; llmMode?: LlmMode } }
     >({
       query: ({ sessionId, body }) => ({
         url: `/assistant/sessions/${sessionId}/simulate`,
