@@ -1,0 +1,18 @@
+{
+  "generatedAt": "2026-03-28",
+  "files": {
+    "historicalSeriesCsv": "data/market/sniim/sniim_historical_series_20260328.csv",
+    "ingestPayloadsJson": "data/market/sniim/sniim_ingest_payloads_20260328.json",
+    "historicalStatsJson": "data/market/sniim/sniim_historical_stats_20260328.json"
+  },
+  "ingredientsResolvedToIds": {
+    "Cascarilla de soya": "38b1441f-52f5-40f4-8a2b-d53dccb3b2ae",
+    "Heno de alfalfa": "4fd42ff5-1667-423f-ba1b-8f637e690a3a",
+    "Maiz molido": "8e8a0c22-95d4-4f70-a01a-00ed062921c2",
+    "Melaza de cana": "fb8d02cb-e98b-4420-87ca-b2d174333f4d",
+    "Pasta de canola": "ffc07a4b-1f72-47a9-b509-0971134eb690",
+    "Pasta de soya": "835e2ba5-f36a-468b-85e7-634db9180620",
+    "Sorgo rolado": "7e07c643-982d-4236-9a70-3179c83afe51",
+    "Urea pecuaria": "3f0602c8-17bf-4120-9672-b592e7fd061f"
+  }
+}

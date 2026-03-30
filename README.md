@@ -165,6 +165,32 @@ docker compose -f infra/docker-compose.yml exec -T api npm run build
 docker compose -f infra/docker-compose.yml exec -T web npm run build
 ```
 
+## Experimento de validacion
+
+Entradas congeladas para capitulo 6:
+
+```bash
+npm run experiment:inputs
+```
+
+Backtesting economico:
+
+```bash
+npm run experiment:economic
+```
+
+Benchmark agentic determinista:
+
+```bash
+npm run experiment:agentic
+```
+
+Paquete completo del capitulo 6:
+
+```bash
+npm run experiment:chapter6
+```
+
 ## Documentacion recomendada
 
 1. `docs/USER_GUIDE.md`: guia operativa rapida para uso diario.
@@ -175,3 +201,4 @@ docker compose -f infra/docker-compose.yml exec -T web npm run build
 6. `docs/ACCEPTANCE_CRITERIA.md`: criterios funcionales, tecnicos y UX.
 7. `docs/TECH_REFINED.md`: objetivo estrategico de la capa IA.
 8. `docs/architecture-caporal-ai.svg`: diagrama de arquitectura del sistema.
+9. `docs/EXPERIMENT_RUNBOOK.md`: instrucciones para correr el experimento de validacion.

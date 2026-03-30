@@ -10,6 +10,13 @@
   "scripts": {
     "dev": "docker compose -f infra/docker-compose.yml up --build",
     "dev:down": "docker compose -f infra/docker-compose.yml down",
+    "experiment:deps": "timeout 300 bash -lc 'python3 -m venv .venv-experiments && .venv-experiments/bin/pip install --upgrade pip && .venv-experiments/bin/pip install -r scripts/experiments/requirements.txt'",
+    "experiment:inputs": "timeout 30 python3 scripts/experiments/generate_frozen_inputs.py",
+    "experiment:economic": "timeout 300 scripts/experiments/run_economic_with_render.sh",
+    "experiment:economics": "yarn experiment:economic",
+    "experiment:agentic": "timeout 300 scripts/experiments/run_agentic_with_render.sh --llm-mode OFF",
+    "experiment:render": "timeout 240 scripts/experiments/python_runner.sh scripts/experiments/render_experiment_evidence.py --input-dir data/experiments/reports/latest --output-dir data/experiments/reports/latest --mode auto",
+    "experiment:chapter6": "timeout 720 scripts/experiments/run_chapter6_validation.sh",
     "lint": "npm run lint -ws --if-present",
     "test": "npm run test -ws --if-present"
   },

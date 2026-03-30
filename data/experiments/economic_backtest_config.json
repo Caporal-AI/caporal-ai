@@ -1,0 +1,371 @@
+{
+  "runId": "chapter6-v1",
+  "seed": 3005,
+  "startDate": "2026-01-01",
+  "days": 90,
+  "animalProfile": {
+    "intakeDmKgPerDay": 10.2,
+    "constraints": [
+      {
+        "code": "CP",
+        "min": 0.125,
+        "max": 0.175,
+        "unit": "fraction_dm",
+        "label": "Proteina cruda"
+      },
+      {
+        "code": "NDF",
+        "min": 0.18,
+        "max": 0.34,
+        "unit": "fraction_dm",
+        "label": "Fibra detergente neutro"
+      },
+      {
+        "code": "ME_MCAL_KGDM",
+        "min": 2.3,
+        "max": 3.05,
+        "unit": "per_kg_dm",
+        "label": "Energia metabolizable"
+      },
+      {
+        "code": "Ca",
+        "min": 0.004,
+        "max": 0.012,
+        "unit": "fraction_dm",
+        "label": "Calcio"
+      },
+      {
+        "code": "P",
+        "min": 0.0025,
+        "max": 0.007,
+        "unit": "fraction_dm",
+        "label": "Fosforo"
+      }
+    ]
+  },
+  "batchContext": {
+    "batchId": "exp-lote-sintetico-100",
+    "breed": "Cruzado",
+    "headCount": 100,
+    "currentAverageWeightKg": 350,
+    "targetSaleWeightKg": 520,
+    "daysOnFeed": 0,
+    "climate": {
+      "avgTemperatureC": 29,
+      "humidityPct": 42
+    }
+  },
+  "salePriceMxnPerKg": 55.0,
+  "purchasePriceMxnPerKg": 43.0,
+  "otherCostMxnPerHead": 350.0,
+  "ingredients": [
+    {
+      "id": "maiz-molido",
+      "name": "Maiz molido",
+      "category": "energy",
+      "dryMatterPct": 88,
+      "basePriceMxnPerKgAsFed": 6.2,
+      "nutrients": {
+        "CP": 0.09,
+        "NDF": 0.11,
+        "ME_MCAL_KGDM": 3.05,
+        "Ca": 0.0003,
+        "P": 0.003
+      },
+      "boundsPct": {
+        "min": 5,
+        "max": 70
+      }
+    },
+    {
+      "id": "sorgo-rolado",
+      "name": "Sorgo rolado",
+      "category": "energy",
+      "dryMatterPct": 89,
+      "basePriceMxnPerKgAsFed": 5.8,
+      "nutrients": {
+        "CP": 0.1,
+        "NDF": 0.13,
+        "ME_MCAL_KGDM": 2.9,
+        "Ca": 0.0004,
+        "P": 0.0032
+      },
+      "boundsPct": {
+        "min": 0,
+        "max": 55
+      }
+    },
+    {
+      "id": "pasta-soya",
+      "name": "Pasta de soya",
+      "category": "protein",
+      "dryMatterPct": 89,
+      "basePriceMxnPerKgAsFed": 10.8,
+      "nutrients": {
+        "CP": 0.47,
+        "NDF": 0.12,
+        "ME_MCAL_KGDM": 3.0,
+        "Ca": 0.003,
+        "P": 0.0065
+      },
+      "boundsPct": {
+        "min": 0,
+        "max": 18
+      }
+    },
+    {
+      "id": "pasta-canola",
+      "name": "Pasta de canola",
+      "category": "protein",
+      "dryMatterPct": 90,
+      "basePriceMxnPerKgAsFed": 9.6,
+      "nutrients": {
+        "CP": 0.38,
+        "NDF": 0.22,
+        "ME_MCAL_KGDM": 2.75,
+        "Ca": 0.006,
+        "P": 0.011
+      },
+      "boundsPct": {
+        "min": 0,
+        "max": 15
+      }
+    },
+    {
+      "id": "melaza-cana",
+      "name": "Melaza de cana",
+      "category": "additive",
+      "dryMatterPct": 75,
+      "basePriceMxnPerKgAsFed": 4.4,
+      "nutrients": {
+        "CP": 0.05,
+        "NDF": 0.0,
+        "ME_MCAL_KGDM": 2.6,
+        "Ca": 0.008,
+        "P": 0.0008
+      },
+      "boundsPct": {
+        "min": 0,
+        "max": 12
+      }
+    },
+    {
+      "id": "rastrojo-maiz",
+      "name": "Rastrojo de maiz",
+      "category": "fiber",
+      "dryMatterPct": 90,
+      "basePriceMxnPerKgAsFed": 2.1,
+      "nutrients": {
+        "CP": 0.05,
+        "NDF": 0.68,
+        "ME_MCAL_KGDM": 1.75,
+        "Ca": 0.003,
+        "P": 0.0011
+      },
+      "boundsPct": {
+        "min": 5,
+        "max": 25
+      }
+    },
+    {
+      "id": "heno-alfalfa",
+      "name": "Heno de alfalfa",
+      "category": "fiber",
+      "dryMatterPct": 89,
+      "basePriceMxnPerKgAsFed": 5.9,
+      "nutrients": {
+        "CP": 0.19,
+        "NDF": 0.43,
+        "ME_MCAL_KGDM": 2.25,
+        "Ca": 0.014,
+        "P": 0.0023
+      },
+      "boundsPct": {
+        "min": 0,
+        "max": 20
+      }
+    },
+    {
+      "id": "pollinaza-seca",
+      "name": "Pollinaza seca",
+      "category": "protein",
+      "dryMatterPct": 86,
+      "basePriceMxnPerKgAsFed": 1.8,
+      "nutrients": {
+        "CP": 0.24,
+        "NDF": 0.34,
+        "ME_MCAL_KGDM": 2.05,
+        "Ca": 0.035,
+        "P": 0.018
+      },
+      "boundsPct": {
+        "min": 0,
+        "max": 8
+      }
+    },
+    {
+      "id": "ddgs-maiz",
+      "name": "DDGS maiz",
+      "category": "energy",
+      "dryMatterPct": 90,
+      "basePriceMxnPerKgAsFed": 7.1,
+      "nutrients": {
+        "CP": 0.3,
+        "NDF": 0.32,
+        "ME_MCAL_KGDM": 3.05,
+        "Ca": 0.0012,
+        "P": 0.009
+      },
+      "boundsPct": {
+        "min": 0,
+        "max": 20
+      }
+    },
+    {
+      "id": "cascarilla-soya",
+      "name": "Cascarilla de soya",
+      "category": "fiber",
+      "dryMatterPct": 90,
+      "basePriceMxnPerKgAsFed": 4.5,
+      "nutrients": {
+        "CP": 0.12,
+        "NDF": 0.64,
+        "ME_MCAL_KGDM": 2.3,
+        "Ca": 0.005,
+        "P": 0.0017
+      },
+      "boundsPct": {
+        "min": 0,
+        "max": 22
+      }
+    },
+    {
+      "id": "grasa-protegida",
+      "name": "Grasa protegida",
+      "category": "additive",
+      "dryMatterPct": 99,
+      "basePriceMxnPerKgAsFed": 24.0,
+      "nutrients": {
+        "CP": 0.0,
+        "NDF": 0.0,
+        "ME_MCAL_KGDM": 5.8,
+        "Ca": 0.08,
+        "P": 0.0
+      },
+      "boundsPct": {
+        "min": 0,
+        "max": 3
+      }
+    },
+    {
+      "id": "urea-pecuaria",
+      "name": "Urea pecuaria",
+      "category": "additive",
+      "dryMatterPct": 99,
+      "basePriceMxnPerKgAsFed": 13.5,
+      "nutrients": {
+        "CP": 2.81,
+        "NDF": 0.0,
+        "ME_MCAL_KGDM": 0.0,
+        "Ca": 0.0,
+        "P": 0.0
+      },
+      "boundsPct": {
+        "min": 0,
+        "max": 1
+      }
+    },
+    {
+      "id": "carbonato-calcio",
+      "name": "Carbonato de calcio",
+      "category": "mineral",
+      "dryMatterPct": 99,
+      "basePriceMxnPerKgAsFed": 3.7,
+      "nutrients": {
+        "CP": 0.0,
+        "NDF": 0.0,
+        "ME_MCAL_KGDM": 0.0,
+        "Ca": 0.38,
+        "P": 0.0
+      },
+      "boundsPct": {
+        "min": 0,
+        "max": 1.2
+      }
+    },
+    {
+      "id": "fosfato-dicalcico",
+      "name": "Fosfato dicalcico",
+      "category": "mineral",
+      "dryMatterPct": 98,
+      "basePriceMxnPerKgAsFed": 18.2,
+      "nutrients": {
+        "CP": 0.0,
+        "NDF": 0.0,
+        "ME_MCAL_KGDM": 0.0,
+        "Ca": 0.22,
+        "P": 0.18
+      },
+      "boundsPct": {
+        "min": 0,
+        "max": 1
+      }
+    },
+    {
+      "id": "nucleo-mineral-engorda",
+      "name": "Nucleo mineral engorda",
+      "category": "mineral",
+      "dryMatterPct": 97,
+      "basePriceMxnPerKgAsFed": 16.0,
+      "nutrients": {
+        "CP": 0.0,
+        "NDF": 0.0,
+        "ME_MCAL_KGDM": 0.0,
+        "Ca": 0.16,
+        "P": 0.06
+      },
+      "boundsPct": {
+        "min": 0.5,
+        "max": 2
+      }
+    },
+    {
+      "id": "sal-comun",
+      "name": "Sal comun",
+      "category": "mineral",
+      "dryMatterPct": 99,
+      "basePriceMxnPerKgAsFed": 2.7,
+      "nutrients": {
+        "CP": 0.0,
+        "NDF": 0.0,
+        "ME_MCAL_KGDM": 0.0,
+        "Ca": 0.0,
+        "P": 0.0
+      },
+      "boundsPct": {
+        "min": 0.3,
+        "max": 1
+      }
+    }
+  ],
+  "baselineDescription": "Racion fija operacional de referencia para corral de engorda. Representa una mezcla estatica tecnicamente plausible usada como comparador economico, sin recalculo diario ante volatilidad de precios.",
+  "baselineDietPctDm": {
+    "maiz-molido": 38,
+    "sorgo-rolado": 24,
+    "rastrojo-maiz": 14,
+    "pasta-soya": 8,
+    "ddgs-maiz": 8,
+    "pollinaza-seca": 4,
+    "melaza-cana": 2,
+    "nucleo-mineral-engorda": 1,
+    "sal-comun": 1
+  },
+  "acceptanceCriteria": {
+    "economic": {
+      "meanSavingsPctMin": 0.0,
+      "ciLowerBoundSavingsMxnMin": 0.0,
+      "requireAllDaysFeasible": true,
+      "maxOptimizedHardViolations": 0
+    }
+  }
+}

@@ -34,6 +34,7 @@ pnpm-debug.log*
 __pycache__/
 *.py[cod]
 .venv/
+.venv-experiments/
 venv/
 .pytest_cache/
 .mypy_cache/
@@ -42,6 +43,9 @@ venv/
 # Test artifacts
 .playwright/
 test-results/
+data/experiments/reports/*
+!data/experiments/reports/.gitkeep
+data/rag/reports/*.json
 
 # IDE / OS
 .idea/

@@ -1,0 +1,1292 @@
+{
+  "generatedAt": "2026-03-28",
+  "window": {
+    "start": "2024-01",
+    "end": "2026-02"
+  },
+  "source": {
+    "name": "SNIIM ingredientes para la formulacion de raciones",
+    "sourcePageUrl": "http://www.economia-sniim.gob.mx/SNIIM-Pecuarios-Nacionales/SelIng.asp",
+    "sourceResultUrl": "http://www.economia-sniim.gob.mx/SNIIM-Pecuarios-Nacionales/e_Ing.asp"
+  },
+  "ingredients": [
+    {
+      "ingredientId": "8e8a0c22-95d4-4f70-a01a-00ed062921c2",
+      "ingredientName": "Maiz molido",
+      "sourceProductCode": 804,
+      "sourceProductName": "Maiz amarillo",
+      "matchType": "proxy",
+      "matchNote": "SNIIM no publica 'Maiz molido' como tal; se usa 'Maiz amarillo' como proxy del grano energetico base.",
+      "availableMonths": 26,
+      "availableOriginObservations": 52,
+      "flaggedObservationCount": 0,
+      "latestMonth": "2026-02",
+      "latestNationalSimpleAvgMxnPerKgAsFed": 5.3825,
+      "minNationalSimpleAvgMxnPerKgAsFed": 5.3825,
+      "maxNationalSimpleAvgMxnPerKgAsFed": 7.08,
+      "mean12mNationalSimpleAvgMxnPerKgAsFed": 6.0228,
+      "stdev12mNationalSimpleAvgMxnPerKgAsFed": 0.3896,
+      "yoyPctVsSameMonth": -7.75,
+      "nationalMonthlySeries": [
+        {
+          "month": "2024-01",
+          "simpleAvgMxnPerKgAsFed": 6.025,
+          "originCount": 2
+        },
+        {
+          "month": "2024-02",
+          "simpleAvgMxnPerKgAsFed": 5.875,
+          "originCount": 2
+        },
+        {
+          "month": "2024-03",
+          "simpleAvgMxnPerKgAsFed": 5.815,
+          "originCount": 2
+        },
+        {
+          "month": "2024-04",
+          "simpleAvgMxnPerKgAsFed": 5.74,
+          "originCount": 2
+        },
+        {
+          "month": "2024-05",
+          "simpleAvgMxnPerKgAsFed": 5.55,
+          "originCount": 2
+        },
+        {
+          "month": "2024-06",
+          "simpleAvgMxnPerKgAsFed": 5.725,
+          "originCount": 2
+        },
+        {
+          "month": "2024-07",
+          "simpleAvgMxnPerKgAsFed": 5.65,
+          "originCount": 2
+        },
+        {
+          "month": "2024-08",
+          "simpleAvgMxnPerKgAsFed": 5.815,
+          "originCount": 2
+        },
+        {
+          "month": "2024-09",
+          "simpleAvgMxnPerKgAsFed": 5.7825,
+          "originCount": 2
+        },
+        {
+          "month": "2024-10",
+          "simpleAvgMxnPerKgAsFed": 5.8875,
+          "originCount": 2
+        },
+        {
+          "month": "2024-11",
+          "simpleAvgMxnPerKgAsFed": 5.775,
+          "originCount": 2
+        },
+        {
+          "month": "2024-12",
+          "simpleAvgMxnPerKgAsFed": 5.775,
+          "originCount": 2
+        },
+        {
+          "month": "2025-01",
+          "simpleAvgMxnPerKgAsFed": 5.9825,
+          "originCount": 2
+        },
+        {
+          "month": "2025-02",
+          "simpleAvgMxnPerKgAsFed": 5.835,
+          "originCount": 2
+        },
+        {
+          "month": "2025-03",
+          "simpleAvgMxnPerKgAsFed": 5.835,
+          "originCount": 2
+        },
+        {
+          "month": "2025-04",
+          "simpleAvgMxnPerKgAsFed": 6.085,
+          "originCount": 2
+        },
+        {
+          "month": "2025-05",
+          "simpleAvgMxnPerKgAsFed": 7.08,
+          "originCount": 1
+        },
+        {
+          "month": "2025-06",
+          "simpleAvgMxnPerKgAsFed": 6.1933,
+          "originCount": 3
+        },
+        {
+          "month": "2025-07",
+          "simpleAvgMxnPerKgAsFed": 6.275,
+          "originCount": 2
+        },
+        {
+          "month": "2025-08",
+          "simpleAvgMxnPerKgAsFed": 5.895,
+          "originCount": 2
+        },
+        {
+          "month": "2025-09",
+          "simpleAvgMxnPerKgAsFed": 5.87,
+          "originCount": 2
+        },
+        {
+          "month": "2025-10",
+          "simpleAvgMxnPerKgAsFed": 5.995,
+          "originCount": 2
+        },
+        {
+          "month": "2025-11",
+          "simpleAvgMxnPerKgAsFed": 6.01,
+          "originCount": 2
+        },
+        {
+          "month": "2025-12",
+          "simpleAvgMxnPerKgAsFed": 5.975,
+          "originCount": 2
+        },
+        {
+          "month": "2026-01",
+          "simpleAvgMxnPerKgAsFed": 5.6775,
+          "originCount": 2
+        },
+        {
+          "month": "2026-02",
+          "simpleAvgMxnPerKgAsFed": 5.3825,
+          "originCount": 2
+        }
+      ],
+      "sources": [
+        {
+          "sourcePageUrl": "http://www.economia-sniim.gob.mx/SNIIM-Pecuarios-Nacionales/SelIng.asp",
+          "sourceResultUrl": "http://www.economia-sniim.gob.mx/SNIIM-Pecuarios-Nacionales/e_Ing.asp",
+          "latestQuery": {
+            "prod": "804",
+            "origen": "0",
+            "RegPag": "1000"
+          }
+        }
+      ]
+    },
+    {
+      "ingredientId": "7e07c643-982d-4236-9a70-3179c83afe51",
+      "ingredientName": "Sorgo rolado",
+      "sourceProductCode": 809,
+      "sourceProductName": "Sorgo molido",
+      "matchType": "proxy",
+      "matchNote": "SNIIM no reporto 'Sorgo rolado' en el ultimo corte; se usa 'Sorgo molido' como aproximacion operativa.",
+      "availableMonths": 26,
+      "availableOriginObservations": 51,
+      "flaggedObservationCount": 0,
+      "latestMonth": "2026-02",
+      "latestNationalSimpleAvgMxnPerKgAsFed": 5.575,
+      "minNationalSimpleAvgMxnPerKgAsFed": 5.375,
+      "maxNationalSimpleAvgMxnPerKgAsFed": 7.475,
+      "mean12mNationalSimpleAvgMxnPerKgAsFed": 6.1029,
+      "stdev12mNationalSimpleAvgMxnPerKgAsFed": 0.444,
+      "yoyPctVsSameMonth": -3.8,
+      "nationalMonthlySeries": [
+        {
+          "month": "2024-01",
+          "simpleAvgMxnPerKgAsFed": 6.6,
+          "originCount": 2
+        },
+        {
+          "month": "2024-02",
+          "simpleAvgMxnPerKgAsFed": 7.475,
+          "originCount": 2
+        },
+        {
+          "month": "2024-03",
+          "simpleAvgMxnPerKgAsFed": 6.125,
+          "originCount": 2
+        },
+        {
+          "month": "2024-04",
+          "simpleAvgMxnPerKgAsFed": 6.125,
+          "originCount": 2
+        },
+        {
+          "month": "2024-05",
+          "simpleAvgMxnPerKgAsFed": 5.75,
+          "originCount": 1
+        },
+        {
+          "month": "2024-06",
+          "simpleAvgMxnPerKgAsFed": 6.1,
+          "originCount": 2
+        },
+        {
+          "month": "2024-07",
+          "simpleAvgMxnPerKgAsFed": 6.0375,
+          "originCount": 2
+        },
+        {
+          "month": "2024-08",
+          "simpleAvgMxnPerKgAsFed": 5.375,
+          "originCount": 2
+        },
+        {
+          "month": "2024-09",
+          "simpleAvgMxnPerKgAsFed": 5.4875,
+          "originCount": 2
+        },
+        {
+          "month": "2024-10",
+          "simpleAvgMxnPerKgAsFed": 5.4875,
+          "originCount": 2
+        },
+        {
+          "month": "2024-11",
+          "simpleAvgMxnPerKgAsFed": 5.52,
+          "originCount": 2
+        },
+        {
+          "month": "2024-12",
+          "simpleAvgMxnPerKgAsFed": 5.5825,
+          "originCount": 2
+        },
+        {
+          "month": "2025-01",
+          "simpleAvgMxnPerKgAsFed": 5.635,
+          "originCount": 2
+        },
+        {
+          "month": "2025-02",
+          "simpleAvgMxnPerKgAsFed": 5.795,
+          "originCount": 2
+        },
+        {
+          "month": "2025-03",
+          "simpleAvgMxnPerKgAsFed": 6.545,
+          "originCount": 2
+        },
+        {
+          "month": "2025-04",
+          "simpleAvgMxnPerKgAsFed": 6.545,
+          "originCount": 2
+        },
+        {
+          "month": "2025-05",
+          "simpleAvgMxnPerKgAsFed": 6.98,
+          "originCount": 2
+        },
+        {
+          "month": "2025-06",
+          "simpleAvgMxnPerKgAsFed": 6.005,
+          "originCount": 2
+        },
+        {
+          "month": "2025-07",
+          "simpleAvgMxnPerKgAsFed": 6.025,
+          "originCount": 2
+        },
+        {
+          "month": "2025-08",
+          "simpleAvgMxnPerKgAsFed": 5.65,
+          "originCount": 2
+        },
+        {
+          "month": "2025-09",
+          "simpleAvgMxnPerKgAsFed": 6.4125,
+          "originCount": 2
+        },
+        {
+          "month": "2025-10",
+          "simpleAvgMxnPerKgAsFed": 6.4125,
+          "originCount": 2
+        },
+        {
+          "month": "2025-11",
+          "simpleAvgMxnPerKgAsFed": 5.745,
+          "originCount": 2
+        },
+        {
+          "month": "2025-12",
+          "simpleAvgMxnPerKgAsFed": 5.745,
+          "originCount": 2
+        },
+        {
+          "month": "2026-01",
+          "simpleAvgMxnPerKgAsFed": 5.595,
+          "originCount": 2
+        },
+        {
+          "month": "2026-02",
+          "simpleAvgMxnPerKgAsFed": 5.575,
+          "originCount": 2
+        }
+      ],
+      "sources": [
+        {
+          "sourcePageUrl": "http://www.economia-sniim.gob.mx/SNIIM-Pecuarios-Nacionales/SelIng.asp",
+          "sourceResultUrl": "http://www.economia-sniim.gob.mx/SNIIM-Pecuarios-Nacionales/e_Ing.asp",
+          "latestQuery": {
+            "prod": "809",
+            "origen": "0",
+            "RegPag": "1000"
+          }
+        }
+      ]
+    },
+    {
+      "ingredientId": "4fd42ff5-1667-423f-ba1b-8f637e690a3a",
+      "ingredientName": "Heno de alfalfa",
+      "sourceProductCode": 817,
+      "sourceProductName": "Alfalfa pacas",
+      "matchType": "proxy",
+      "matchNote": "La presentacion 'Alfalfa pacas' es la mas cercana al heno comercial para corral.",
+      "availableMonths": 26,
+      "availableOriginObservations": 51,
+      "flaggedObservationCount": 0,
+      "latestMonth": "2026-02",
+      "latestNationalSimpleAvgMxnPerKgAsFed": 7.6375,
+      "minNationalSimpleAvgMxnPerKgAsFed": 6.2,
+      "maxNationalSimpleAvgMxnPerKgAsFed": 9.125,
+      "mean12mNationalSimpleAvgMxnPerKgAsFed": 7.6073,
+      "stdev12mNationalSimpleAvgMxnPerKgAsFed": 0.4905,
+      "yoyPctVsSameMonth": -0.16,
+      "nationalMonthlySeries": [
+        {
+          "month": "2024-01",
+          "simpleAvgMxnPerKgAsFed": 7.8,
+          "originCount": 2
+        },
+        {
+          "month": "2024-02",
+          "simpleAvgMxnPerKgAsFed": 7.8,
+          "originCount": 2
+        },
+        {
+          "month": "2024-03",
+          "simpleAvgMxnPerKgAsFed": 8.1,
+          "originCount": 2
+        },
+        {
+          "month": "2024-04",
+          "simpleAvgMxnPerKgAsFed": 8.225,
+          "originCount": 2
+        },
+        {
+          "month": "2024-05",
+          "simpleAvgMxnPerKgAsFed": 8.5375,
+          "originCount": 2
+        },
+        {
+          "month": "2024-06",
+          "simpleAvgMxnPerKgAsFed": 8.725,
+          "originCount": 2
+        },
+        {
+          "month": "2024-07",
+          "simpleAvgMxnPerKgAsFed": 8.725,
+          "originCount": 2
+        },
+        {
+          "month": "2024-08",
+          "simpleAvgMxnPerKgAsFed": 6.2,
+          "originCount": 1
+        },
+        {
+          "month": "2024-09",
+          "simpleAvgMxnPerKgAsFed": 7.6,
+          "originCount": 2
+        },
+        {
+          "month": "2024-10",
+          "simpleAvgMxnPerKgAsFed": 7.5375,
+          "originCount": 2
+        },
+        {
+          "month": "2024-11",
+          "simpleAvgMxnPerKgAsFed": 7.55,
+          "originCount": 2
+        },
+        {
+          "month": "2024-12",
+          "simpleAvgMxnPerKgAsFed": 7.55,
+          "originCount": 2
+        },
+        {
+          "month": "2025-01",
+          "simpleAvgMxnPerKgAsFed": 7.5875,
+          "originCount": 2
+        },
+        {
+          "month": "2025-02",
+          "simpleAvgMxnPerKgAsFed": 7.65,
+          "originCount": 2
+        },
+        {
+          "month": "2025-03",
+          "simpleAvgMxnPerKgAsFed": 7.65,
+          "originCount": 2
+        },
+        {
+          "month": "2025-04",
+          "simpleAvgMxnPerKgAsFed": 7.625,
+          "originCount": 2
+        },
+        {
+          "month": "2025-05",
+          "simpleAvgMxnPerKgAsFed": 9.125,
+          "originCount": 1
+        },
+        {
+          "month": "2025-06",
+          "simpleAvgMxnPerKgAsFed": 6.975,
+          "originCount": 3
+        },
+        {
+          "month": "2025-07",
+          "simpleAvgMxnPerKgAsFed": 7.5125,
+          "originCount": 2
+        },
+        {
+          "month": "2025-08",
+          "simpleAvgMxnPerKgAsFed": 7.45,
+          "originCount": 2
+        },
+        {
+          "month": "2025-09",
+          "simpleAvgMxnPerKgAsFed": 7.45,
+          "originCount": 2
+        },
+        {
+          "month": "2025-10",
+          "simpleAvgMxnPerKgAsFed": 7.45,
+          "originCount": 2
+        },
+        {
+          "month": "2025-11",
+          "simpleAvgMxnPerKgAsFed": 7.3875,
+          "originCount": 2
+        },
+        {
+          "month": "2025-12",
+          "simpleAvgMxnPerKgAsFed": 7.3875,
+          "originCount": 2
+        },
+        {
+          "month": "2026-01",
+          "simpleAvgMxnPerKgAsFed": 7.6375,
+          "originCount": 2
+        },
+        {
+          "month": "2026-02",
+          "simpleAvgMxnPerKgAsFed": 7.6375,
+          "originCount": 2
+        }
+      ],
+      "sources": [
+        {
+          "sourcePageUrl": "http://www.economia-sniim.gob.mx/SNIIM-Pecuarios-Nacionales/SelIng.asp",
+          "sourceResultUrl": "http://www.economia-sniim.gob.mx/SNIIM-Pecuarios-Nacionales/e_Ing.asp",
+          "latestQuery": {
+            "prod": "817",
+            "origen": "0",
+            "RegPag": "1000"
+          }
+        }
+      ]
+    },
+    {
+      "ingredientId": "835e2ba5-f36a-468b-85e7-634db9180620",
+      "ingredientName": "Pasta de soya",
+      "sourceProductCode": 834,
+      "sourceProductName": "Pasta de soya",
+      "matchType": "exact",
+      "matchNote": null,
+      "availableMonths": 25,
+      "availableOriginObservations": 31,
+      "flaggedObservationCount": 0,
+      "latestMonth": "2026-02",
+      "latestNationalSimpleAvgMxnPerKgAsFed": 7.35,
+      "minNationalSimpleAvgMxnPerKgAsFed": 6.73,
+      "maxNationalSimpleAvgMxnPerKgAsFed": 11.4,
+      "mean12mNationalSimpleAvgMxnPerKgAsFed": 7.7058,
+      "stdev12mNationalSimpleAvgMxnPerKgAsFed": 0.4619,
+      "yoyPctVsSameMonth": -9.26,
+      "nationalMonthlySeries": [
+        {
+          "month": "2024-01",
+          "simpleAvgMxnPerKgAsFed": 11.4,
+          "originCount": 1
+        },
+        {
+          "month": "2024-02",
+          "simpleAvgMxnPerKgAsFed": 9.25,
+          "originCount": 1
+        },
+        {
+          "month": "2024-03",
+          "simpleAvgMxnPerKgAsFed": 8.45,
+          "originCount": 1
+        },
+        {
+          "month": "2024-04",
+          "simpleAvgMxnPerKgAsFed": 8.2,
+          "originCount": 1
+        },
+        {
+          "month": "2024-05",
+          "simpleAvgMxnPerKgAsFed": 9.175,
+          "originCount": 2
+        },
+        {
+          "month": "2024-06",
+          "simpleAvgMxnPerKgAsFed": 9.675,
+          "originCount": 2
+        },
+        {
+          "month": "2024-07",
+          "simpleAvgMxnPerKgAsFed": 9.3,
+          "originCount": 2
+        },
+        {
+          "month": "2024-08",
+          "simpleAvgMxnPerKgAsFed": 9.625,
+          "originCount": 2
+        },
+        {
+          "month": "2024-09",
+          "simpleAvgMxnPerKgAsFed": 9.85,
+          "originCount": 1
+        },
+        {
+          "month": "2024-10",
+          "simpleAvgMxnPerKgAsFed": 9.25,
+          "originCount": 1
+        },
+        {
+          "month": "2024-11",
+          "simpleAvgMxnPerKgAsFed": 10.0,
+          "originCount": 1
+        },
+        {
+          "month": "2024-12",
+          "simpleAvgMxnPerKgAsFed": 10.0,
+          "originCount": 1
+        },
+        {
+          "month": "2025-01",
+          "simpleAvgMxnPerKgAsFed": 9.235,
+          "originCount": 2
+        },
+        {
+          "month": "2025-02",
+          "simpleAvgMxnPerKgAsFed": 8.1,
+          "originCount": 1
+        },
+        {
+          "month": "2025-03",
+          "simpleAvgMxnPerKgAsFed": 8.1,
+          "originCount": 1
+        },
+        {
+          "month": "2025-04",
+          "simpleAvgMxnPerKgAsFed": 7.65,
+          "originCount": 1
+        },
+        {
+          "month": "2025-06",
+          "simpleAvgMxnPerKgAsFed": 7.4,
+          "originCount": 2
+        },
+        {
+          "month": "2025-07",
+          "simpleAvgMxnPerKgAsFed": 6.73,
+          "originCount": 1
+        },
+        {
+          "month": "2025-08",
+          "simpleAvgMxnPerKgAsFed": 7.05,
+          "originCount": 1
+        },
+        {
+          "month": "2025-09",
+          "simpleAvgMxnPerKgAsFed": 7.9,
+          "originCount": 1
+        },
+        {
+          "month": "2025-10",
+          "simpleAvgMxnPerKgAsFed": 7.84,
+          "originCount": 1
+        },
+        {
+          "month": "2025-11",
+          "simpleAvgMxnPerKgAsFed": 8.0,
+          "originCount": 1
+        },
+        {
+          "month": "2025-12",
+          "simpleAvgMxnPerKgAsFed": 8.35,
+          "originCount": 1
+        },
+        {
+          "month": "2026-01",
+          "simpleAvgMxnPerKgAsFed": 8.0,
+          "originCount": 1
+        },
+        {
+          "month": "2026-02",
+          "simpleAvgMxnPerKgAsFed": 7.35,
+          "originCount": 1
+        }
+      ],
+      "sources": [
+        {
+          "sourcePageUrl": "http://www.economia-sniim.gob.mx/SNIIM-Pecuarios-Nacionales/SelIng.asp",
+          "sourceResultUrl": "http://www.economia-sniim.gob.mx/SNIIM-Pecuarios-Nacionales/e_Ing.asp",
+          "latestQuery": {
+            "prod": "834",
+            "origen": "0",
+            "RegPag": "1000"
+          }
+        }
+      ]
+    },
+    {
+      "ingredientId": "ffc07a4b-1f72-47a9-b509-0971134eb690",
+      "ingredientName": "Pasta de canola",
+      "sourceProductCode": 830,
+      "sourceProductName": "Pasta de canola",
+      "matchType": "exact",
+      "matchNote": null,
+      "availableMonths": 25,
+      "availableOriginObservations": 26,
+      "flaggedObservationCount": 0,
+      "latestMonth": "2026-02",
+      "latestNationalSimpleAvgMxnPerKgAsFed": 5.13,
+      "minNationalSimpleAvgMxnPerKgAsFed": 5.0,
+      "maxNationalSimpleAvgMxnPerKgAsFed": 8.05,
+      "mean12mNationalSimpleAvgMxnPerKgAsFed": 5.3333,
+      "stdev12mNationalSimpleAvgMxnPerKgAsFed": 0.3098,
+      "yoyPctVsSameMonth": -13.78,
+      "nationalMonthlySeries": [
+        {
+          "month": "2024-01",
+          "simpleAvgMxnPerKgAsFed": 8.05,
+          "originCount": 1
+        },
+        {
+          "month": "2024-02",
+          "simpleAvgMxnPerKgAsFed": 7.65,
+          "originCount": 1
+        },
+        {
+          "month": "2024-03",
+          "simpleAvgMxnPerKgAsFed": 6.6,
+          "originCount": 1
+        },
+        {
+          "month": "2024-04",
+          "simpleAvgMxnPerKgAsFed": 6.0,
+          "originCount": 1
+        },
+        {
+          "month": "2024-05",
+          "simpleAvgMxnPerKgAsFed": 5.8,
+          "originCount": 1
+        },
+        {
+          "month": "2024-06",
+          "simpleAvgMxnPerKgAsFed": 6.32,
+          "originCount": 1
+        },
+        {
+          "month": "2024-07",
+          "simpleAvgMxnPerKgAsFed": 6.22,
+          "originCount": 1
+        },
+        {
+          "month": "2024-08",
+          "simpleAvgMxnPerKgAsFed": 6.4,
+          "originCount": 1
+        },
+        {
+          "month": "2024-09",
+          "simpleAvgMxnPerKgAsFed": 7.2,
+          "originCount": 1
+        },
+        {
+          "month": "2024-10",
+          "simpleAvgMxnPerKgAsFed": 7.3,
+          "originCount": 1
+        },
+        {
+          "month": "2024-11",
+          "simpleAvgMxnPerKgAsFed": 7.5,
+          "originCount": 1
+        },
+        {
+          "month": "2024-12",
+          "simpleAvgMxnPerKgAsFed": 7.5,
+          "originCount": 1
+        },
+        {
+          "month": "2025-01",
+          "simpleAvgMxnPerKgAsFed": 6.82,
+          "originCount": 1
+        },
+        {
+          "month": "2025-02",
+          "simpleAvgMxnPerKgAsFed": 5.95,
+          "originCount": 1
+        },
+        {
+          "month": "2025-03",
+          "simpleAvgMxnPerKgAsFed": 5.95,
+          "originCount": 1
+        },
+        {
+          "month": "2025-04",
+          "simpleAvgMxnPerKgAsFed": 5.15,
+          "originCount": 1
+        },
+        {
+          "month": "2025-06",
+          "simpleAvgMxnPerKgAsFed": 5.0,
+          "originCount": 2
+        },
+        {
+          "month": "2025-07",
+          "simpleAvgMxnPerKgAsFed": 5.02,
+          "originCount": 1
+        },
+        {
+          "month": "2025-08",
+          "simpleAvgMxnPerKgAsFed": 5.05,
+          "originCount": 1
+        },
+        {
+          "month": "2025-09",
+          "simpleAvgMxnPerKgAsFed": 5.45,
+          "originCount": 1
+        },
+        {
+          "month": "2025-10",
+          "simpleAvgMxnPerKgAsFed": 5.3,
+          "originCount": 1
+        },
+        {
+          "month": "2025-11",
+          "simpleAvgMxnPerKgAsFed": 5.25,
+          "originCount": 1
+        },
+        {
+          "month": "2025-12",
+          "simpleAvgMxnPerKgAsFed": 5.4,
+          "originCount": 1
+        },
+        {
+          "month": "2026-01",
+          "simpleAvgMxnPerKgAsFed": 5.35,
+          "originCount": 1
+        },
+        {
+          "month": "2026-02",
+          "simpleAvgMxnPerKgAsFed": 5.13,
+          "originCount": 1
+        }
+      ],
+      "sources": [
+        {
+          "sourcePageUrl": "http://www.economia-sniim.gob.mx/SNIIM-Pecuarios-Nacionales/SelIng.asp",
+          "sourceResultUrl": "http://www.economia-sniim.gob.mx/SNIIM-Pecuarios-Nacionales/e_Ing.asp",
+          "latestQuery": {
+            "prod": "830",
+            "origen": "0",
+            "RegPag": "1000"
+          }
+        }
+      ]
+    },
+    {
+      "ingredientId": "38b1441f-52f5-40f4-8a2b-d53dccb3b2ae",
+      "ingredientName": "Cascarilla de soya",
+      "sourceProductCode": 838,
+      "sourceProductName": "Cascarilla de soya",
+      "matchType": "exact",
+      "matchNote": null,
+      "availableMonths": 26,
+      "availableOriginObservations": 46,
+      "flaggedObservationCount": 0,
+      "latestMonth": "2026-02",
+      "latestNationalSimpleAvgMxnPerKgAsFed": 4.935,
+      "minNationalSimpleAvgMxnPerKgAsFed": 2.75,
+      "maxNationalSimpleAvgMxnPerKgAsFed": 9.75,
+      "mean12mNationalSimpleAvgMxnPerKgAsFed": 4.5133,
+      "stdev12mNationalSimpleAvgMxnPerKgAsFed": 0.6226,
+      "yoyPctVsSameMonth": 5.56,
+      "nationalMonthlySeries": [
+        {
+          "month": "2024-01",
+          "simpleAvgMxnPerKgAsFed": 9.75,
+          "originCount": 1
+        },
+        {
+          "month": "2024-02",
+          "simpleAvgMxnPerKgAsFed": 7.1,
+          "originCount": 2
+        },
+        {
+          "month": "2024-03",
+          "simpleAvgMxnPerKgAsFed": 6.815,
+          "originCount": 2
+        },
+        {
+          "month": "2024-04",
+          "simpleAvgMxnPerKgAsFed": 6.825,
+          "originCount": 2
+        },
+        {
+          "month": "2024-05",
+          "simpleAvgMxnPerKgAsFed": 3.75,
+          "originCount": 1
+        },
+        {
+          "month": "2024-06",
+          "simpleAvgMxnPerKgAsFed": 3.75,
+          "originCount": 1
+        },
+        {
+          "month": "2024-07",
+          "simpleAvgMxnPerKgAsFed": 3.75,
+          "originCount": 1
+        },
+        {
+          "month": "2024-08",
+          "simpleAvgMxnPerKgAsFed": 6.825,
+          "originCount": 2
+        },
+        {
+          "month": "2024-09",
+          "simpleAvgMxnPerKgAsFed": 5.175,
+          "originCount": 2
+        },
+        {
+          "month": "2024-10",
+          "simpleAvgMxnPerKgAsFed": 5.25,
+          "originCount": 2
+        },
+        {
+          "month": "2024-11",
+          "simpleAvgMxnPerKgAsFed": 5.27,
+          "originCount": 2
+        },
+        {
+          "month": "2024-12",
+          "simpleAvgMxnPerKgAsFed": 4.77,
+          "originCount": 2
+        },
+        {
+          "month": "2025-01",
+          "simpleAvgMxnPerKgAsFed": 3.75,
+          "originCount": 1
+        },
+        {
+          "month": "2025-02",
+          "simpleAvgMxnPerKgAsFed": 4.675,
+          "originCount": 2
+        },
+        {
+          "month": "2025-03",
+          "simpleAvgMxnPerKgAsFed": 5.05,
+          "originCount": 2
+        },
+        {
+          "month": "2025-04",
+          "simpleAvgMxnPerKgAsFed": 5.05,
+          "originCount": 2
+        },
+        {
+          "month": "2025-05",
+          "simpleAvgMxnPerKgAsFed": 5.25,
+          "originCount": 2
+        },
+        {
+          "month": "2025-06",
+          "simpleAvgMxnPerKgAsFed": 4.875,
+          "originCount": 2
+        },
+        {
+          "month": "2025-07",
+          "simpleAvgMxnPerKgAsFed": 4.375,
+          "originCount": 2
+        },
+        {
+          "month": "2025-08",
+          "simpleAvgMxnPerKgAsFed": 4.375,
+          "originCount": 2
+        },
+        {
+          "month": "2025-09",
+          "simpleAvgMxnPerKgAsFed": 4.375,
+          "originCount": 2
+        },
+        {
+          "month": "2025-10",
+          "simpleAvgMxnPerKgAsFed": 4.375,
+          "originCount": 2
+        },
+        {
+          "month": "2025-11",
+          "simpleAvgMxnPerKgAsFed": 4.375,
+          "originCount": 2
+        },
+        {
+          "month": "2025-12",
+          "simpleAvgMxnPerKgAsFed": 4.375,
+          "originCount": 2
+        },
+        {
+          "month": "2026-01",
+          "simpleAvgMxnPerKgAsFed": 2.75,
+          "originCount": 1
+        },
+        {
+          "month": "2026-02",
+          "simpleAvgMxnPerKgAsFed": 4.935,
+          "originCount": 2
+        }
+      ],
+      "sources": [
+        {
+          "sourcePageUrl": "http://www.economia-sniim.gob.mx/SNIIM-Pecuarios-Nacionales/SelIng.asp",
+          "sourceResultUrl": "http://www.economia-sniim.gob.mx/SNIIM-Pecuarios-Nacionales/e_Ing.asp",
+          "latestQuery": {
+            "prod": "838",
+            "origen": "0",
+            "RegPag": "1000"
+          }
+        }
+      ]
+    },
+    {
+      "ingredientId": "fb8d02cb-e98b-4420-87ca-b2d174333f4d",
+      "ingredientName": "Melaza de cana",
+      "sourceProductCode": 860,
+      "sourceProductName": "Melaza de ca\u00f1a",
+      "matchType": "exact",
+      "matchNote": null,
+      "availableMonths": 26,
+      "availableOriginObservations": 26,
+      "flaggedObservationCount": 0,
+      "latestMonth": "2026-02",
+      "latestNationalSimpleAvgMxnPerKgAsFed": 6.23,
+      "minNationalSimpleAvgMxnPerKgAsFed": 6.23,
+      "maxNationalSimpleAvgMxnPerKgAsFed": 6.8,
+      "mean12mNationalSimpleAvgMxnPerKgAsFed": 6.2525,
+      "stdev12mNationalSimpleAvgMxnPerKgAsFed": 0.0503,
+      "yoyPctVsSameMonth": 0.0,
+      "nationalMonthlySeries": [
+        {
+          "month": "2024-01",
+          "simpleAvgMxnPerKgAsFed": 6.7,
+          "originCount": 1
+        },
+        {
+          "month": "2024-02",
+          "simpleAvgMxnPerKgAsFed": 6.7,
+          "originCount": 1
+        },
+        {
+          "month": "2024-03",
+          "simpleAvgMxnPerKgAsFed": 6.675,
+          "originCount": 1
+        },
+        {
+          "month": "2024-04",
+          "simpleAvgMxnPerKgAsFed": 6.71,
+          "originCount": 1
+        },
+        {
+          "month": "2024-05",
+          "simpleAvgMxnPerKgAsFed": 6.8,
+          "originCount": 1
+        },
+        {
+          "month": "2024-06",
+          "simpleAvgMxnPerKgAsFed": 6.75,
+          "originCount": 1
+        },
+        {
+          "month": "2024-07",
+          "simpleAvgMxnPerKgAsFed": 6.75,
+          "originCount": 1
+        },
+        {
+          "month": "2024-08",
+          "simpleAvgMxnPerKgAsFed": 6.75,
+          "originCount": 1
+        },
+        {
+          "month": "2024-09",
+          "simpleAvgMxnPerKgAsFed": 6.8,
+          "originCount": 1
+        },
+        {
+          "month": "2024-10",
+          "simpleAvgMxnPerKgAsFed": 6.8,
+          "originCount": 1
+        },
+        {
+          "month": "2024-11",
+          "simpleAvgMxnPerKgAsFed": 6.8,
+          "originCount": 1
+        },
+        {
+          "month": "2024-12",
+          "simpleAvgMxnPerKgAsFed": 6.8,
+          "originCount": 1
+        },
+        {
+          "month": "2025-01",
+          "simpleAvgMxnPerKgAsFed": 6.23,
+          "originCount": 1
+        },
+        {
+          "month": "2025-02",
+          "simpleAvgMxnPerKgAsFed": 6.23,
+          "originCount": 1
+        },
+        {
+          "month": "2025-03",
+          "simpleAvgMxnPerKgAsFed": 6.23,
+          "originCount": 1
+        },
+        {
+          "month": "2025-04",
+          "simpleAvgMxnPerKgAsFed": 6.23,
+          "originCount": 1
+        },
+        {
+          "month": "2025-05",
+          "simpleAvgMxnPerKgAsFed": 6.23,
+          "originCount": 1
+        },
+        {
+          "month": "2025-06",
+          "simpleAvgMxnPerKgAsFed": 6.23,
+          "originCount": 1
+        },
+        {
+          "month": "2025-07",
+          "simpleAvgMxnPerKgAsFed": 6.23,
+          "originCount": 1
+        },
+        {
+          "month": "2025-08",
+          "simpleAvgMxnPerKgAsFed": 6.23,
+          "originCount": 1
+        },
+        {
+          "month": "2025-09",
+          "simpleAvgMxnPerKgAsFed": 6.23,
+          "originCount": 1
+        },
+        {
+          "month": "2025-10",
+          "simpleAvgMxnPerKgAsFed": 6.23,
+          "originCount": 1
+        },
+        {
+          "month": "2025-11",
+          "simpleAvgMxnPerKgAsFed": 6.365,
+          "originCount": 1
+        },
+        {
+          "month": "2025-12",
+          "simpleAvgMxnPerKgAsFed": 6.365,
+          "originCount": 1
+        },
+        {
+          "month": "2026-01",
+          "simpleAvgMxnPerKgAsFed": 6.23,
+          "originCount": 1
+        },
+        {
+          "month": "2026-02",
+          "simpleAvgMxnPerKgAsFed": 6.23,
+          "originCount": 1
+        }
+      ],
+      "sources": [
+        {
+          "sourcePageUrl": "http://www.economia-sniim.gob.mx/SNIIM-Pecuarios-Nacionales/SelIng.asp",
+          "sourceResultUrl": "http://www.economia-sniim.gob.mx/SNIIM-Pecuarios-Nacionales/e_Ing.asp",
+          "latestQuery": {
+            "prod": "860",
+            "origen": "0",
+            "RegPag": "1000"
+          }
+        }
+      ]
+    },
+    {
+      "ingredientId": "3f0602c8-17bf-4120-9672-b592e7fd061f",
+      "ingredientName": "Urea pecuaria",
+      "sourceProductCode": 863,
+      "sourceProductName": "Urea",
+      "matchType": "exact",
+      "matchNote": null,
+      "availableMonths": 26,
+      "availableOriginObservations": 75,
+      "flaggedObservationCount": 24,
+      "latestMonth": "2026-02",
+      "latestNationalSimpleAvgMxnPerKgAsFed": 21.7,
+      "minNationalSimpleAvgMxnPerKgAsFed": 6.255,
+      "maxNationalSimpleAvgMxnPerKgAsFed": 22.92,
+      "mean12mNationalSimpleAvgMxnPerKgAsFed": 20.9431,
+      "stdev12mNationalSimpleAvgMxnPerKgAsFed": 3.0222,
+      "yoyPctVsSameMonth": 37.95,
+      "nationalMonthlySeries": [
+        {
+          "month": "2024-01",
+          "simpleAvgMxnPerKgAsFed": 21.4,
+          "originCount": 2
+        },
+        {
+          "month": "2024-02",
+          "simpleAvgMxnPerKgAsFed": 21.4,
+          "originCount": 2
+        },
+        {
+          "month": "2024-03",
+          "simpleAvgMxnPerKgAsFed": 21.455,
+          "originCount": 2
+        },
+        {
+          "month": "2024-04",
+          "simpleAvgMxnPerKgAsFed": 21.49,
+          "originCount": 2
+        },
+        {
+          "month": "2024-05",
+          "simpleAvgMxnPerKgAsFed": 21.4975,
+          "originCount": 2
+        },
+        {
+          "month": "2024-06",
+          "simpleAvgMxnPerKgAsFed": 21.4725,
+          "originCount": 2
+        },
+        {
+          "month": "2024-07",
+          "simpleAvgMxnPerKgAsFed": 21.4725,
+          "originCount": 2
+        },
+        {
+          "month": "2024-08",
+          "simpleAvgMxnPerKgAsFed": 21.4725,
+          "originCount": 2
+        },
+        {
+          "month": "2024-09",
+          "simpleAvgMxnPerKgAsFed": 21.55,
+          "originCount": 2
+        },
+        {
+          "month": "2024-10",
+          "simpleAvgMxnPerKgAsFed": 6.255,
+          "originCount": 2
+        },
+        {
+          "month": "2024-11",
+          "simpleAvgMxnPerKgAsFed": 21.9375,
+          "originCount": 2
+        },
+        {
+          "month": "2024-12",
+          "simpleAvgMxnPerKgAsFed": 21.9375,
+          "originCount": 2
+        },
+        {
+          "month": "2025-01",
+          "simpleAvgMxnPerKgAsFed": 21.46,
+          "originCount": 2
+        },
+        {
+          "month": "2025-02",
+          "simpleAvgMxnPerKgAsFed": 15.73,
+          "originCount": 2
+        },
+        {
+          "month": "2025-03",
+          "simpleAvgMxnPerKgAsFed": 15.73,
+          "originCount": 2
+        },
+        {
+          "month": "2025-04",
+          "simpleAvgMxnPerKgAsFed": 21.46,
+          "originCount": 2
+        },
+        {
+          "month": "2025-05",
+          "simpleAvgMxnPerKgAsFed": 22.0175,
+          "originCount": 2
+        },
+        {
+          "month": "2025-06",
+          "simpleAvgMxnPerKgAsFed": 13.035,
+          "originCount": 1
+        },
+        {
+          "month": "2025-07",
+          "simpleAvgMxnPerKgAsFed": 21.455,
+          "originCount": 2
+        },
+        {
+          "month": "2025-08",
+          "simpleAvgMxnPerKgAsFed": 22.92,
+          "originCount": 2
+        },
+        {
+          "month": "2025-09",
+          "simpleAvgMxnPerKgAsFed": 22.6,
+          "originCount": 2
+        },
+        {
+          "month": "2025-10",
+          "simpleAvgMxnPerKgAsFed": 22.6,
+          "originCount": 2
+        },
+        {
+          "month": "2025-11",
+          "simpleAvgMxnPerKgAsFed": 22.6,
+          "originCount": 2
+        },
+        {
+          "month": "2025-12",
+          "simpleAvgMxnPerKgAsFed": 22.6,
+          "originCount": 2
+        },
+        {
+          "month": "2026-01",
+          "simpleAvgMxnPerKgAsFed": 22.6,
+          "originCount": 2
+        },
+        {
+          "month": "2026-02",
+          "simpleAvgMxnPerKgAsFed": 21.7,
+          "originCount": 2
+        }
+      ],
+      "sources": [
+        {
+          "sourcePageUrl": "http://www.economia-sniim.gob.mx/SNIIM-Pecuarios-Nacionales/SelIng.asp",
+          "sourceResultUrl": "http://www.economia-sniim.gob.mx/SNIIM-Pecuarios-Nacionales/e_Ing.asp",
+          "latestQuery": {
+            "prod": "863",
+            "origen": "0",
+            "RegPag": "1000"
+          }
+        }
+      ]
+    }
+  ]
+}

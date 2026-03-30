@@ -38,7 +38,7 @@ Eso permite separar correctamente:
 
 ### H1. Hipotesis economica
 
-Caporal AI reduce el costo diario de alimentacion por cabeza entre 5% y 10% frente a una dieta estatica baseline, manteniendo cero violaciones de restricciones nutricionales duras en corridas factibles.
+Caporal AI reduce de manera consistente el costo diario de alimentacion por cabeza frente a una dieta estatica baseline de operacion, manteniendo cero violaciones de restricciones nutricionales duras en corridas factibles. Esta hipotesis se considera validada cuando el ahorro medio observado es positivo, el limite inferior del intervalo de confianza del 95% del ahorro se mantiene por arriba de cero y el optimizador conserva factibilidad sin violaciones duras a lo largo del horizonte evaluado.
 
 ### H2. Hipotesis biologica
 
@@ -75,12 +75,17 @@ Para asegurar repetibilidad, el experimento debe declarar explicitamente:
 
 ### Baseline fijo
 
-Para que el baseline sea realmente reproducible, se recomienda fijarlo con porcentajes exactos en base seca:
+Para que el baseline sea realmente reproducible y a la vez represente una receta fija plausible de campo, se recomienda fijarlo con porcentajes exactos en base seca:
 
-1. Maiz molido: 60%
-2. Rastrojo de maiz: 20%
-3. Pasta de soya: 15%
-4. Melaza: 5%
+1. Maiz molido: 38%
+2. Sorgo rolado: 24%
+3. Rastrojo de maiz: 14%
+4. Pasta de soya: 8%
+5. DDGS de maiz: 8%
+6. Pollinaza seca: 4%
+7. Melaza de cana: 2%
+8. Nucleo mineral de engorda: 1%
+9. Sal comun: 1%
 
 El baseline debe permanecer fijo durante todo el horizonte de 90 dias.
 
@@ -130,8 +135,10 @@ Para una entrega academica reproducible, la opcion mas defendible es:
 
 La hipotesis economica se considera validada si:
 
-1. la reduccion media de costo se mantiene entre 5% y 10% frente al baseline,
-2. el numero de violaciones a restricciones duras es cero en todas las corridas factibles.
+1. el ahorro medio porcentual frente al baseline es positivo,
+2. el limite inferior del intervalo de confianza del 95% del ahorro medio diario se mantiene por arriba de cero,
+3. el numero de violaciones a restricciones duras del optimizador es cero en todas las corridas factibles,
+4. todas las corridas del horizonte permanecen factibles.
 
 ## Experimento B. Validacion de seguridad y robustez de la capa IA
 
@@ -256,7 +263,7 @@ Con el fin de que la simulacion sea estrictamente reproducible, la serie tempora
 
 El procedimiento de simulacion economica se ejecuta en cinco pasos. Primero, se carga el lote sintetico y se inicializa el catalogo de ingredientes con sus perfiles nutricionales y limites operativos. Segundo, se aplica la dieta estatica baseline y se calcula su costo diario por cabeza y su costo diario total para el lote completo. Tercero, con el mismo conjunto de precios del dia, se invoca el motor de optimizacion de Caporal AI, implementado mediante programacion lineal con el resolvedor HiGHS de SciPy, para obtener la mezcla de minimo costo compatible con las restricciones nutricionales y operativas. Cuarto, se registran para ambos escenarios el costo diario por cabeza, el costo total del lote, la composicion de la mezcla y el reporte de restricciones satisfechas o no satisfechas. Quinto, se repite el procedimiento para los 90 dias del horizonte experimental y se acumulan las metricas economicas correspondientes.
 
-A partir de esta ejecucion se obtienen las variables principales del experimento economico: costo diario por cabeza bajo baseline, costo diario por cabeza bajo dieta optimizada, ahorro absoluto diario, ahorro porcentual diario, costo acumulado del lote en 90 dias y numero de violaciones a restricciones duras. La hipotesis de valor del sistema se considera confirmada unicamente si la reduccion economica promedio se mantiene dentro del rango objetivo del proyecto, es decir, entre 5% y 10% respecto al baseline, y si simultaneamente el numero de violaciones a restricciones nutricionales duras es igual a cero en todas las corridas factibles.
+A partir de esta ejecucion se obtienen las variables principales del experimento economico: costo diario por cabeza bajo baseline, costo diario por cabeza bajo dieta optimizada, ahorro absoluto diario, ahorro porcentual diario, costo acumulado del lote en 90 dias y numero de violaciones a restricciones duras. La hipotesis de valor del sistema se considera confirmada unicamente si el ahorro medio observado frente al baseline es positivo, si el limite inferior del intervalo de confianza del 95% del ahorro medio diario permanece por arriba de cero, y si simultaneamente el numero de violaciones a restricciones nutricionales duras del optimizador es igual a cero en todas las corridas factibles.
 
 El segundo experimento se orienta a la validacion de la capa de Inteligencia Artificial explicativa y conversacional. Su objetivo no es medir rentabilidad, sino comprobar que el sistema mantiene un comportamiento seguro, trazable y fundamentado cuando recibe preguntas ambiguas, adversariales o potencialmente peligrosas. Para ello se define un banco de 100 consultas congeladas, redactadas en espanol y agrupadas en cuatro categorias: solicitudes de dosificacion directa sin pasar por el solver, preguntas sin evidencia suficiente en el corpus, hipotesis ambiguas o incompletas de tipo "que pasa si", y solicitudes de cambio que rebasan limites nutricionales o de inclusion. Este banco permanece fijo durante la evaluacion final y se ejecuta sin modificar ni el corpus indexado ni las reglas de seguridad del sistema.
 

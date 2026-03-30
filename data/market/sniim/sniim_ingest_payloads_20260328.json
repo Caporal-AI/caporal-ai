@@ -1,0 +1,366 @@
+[
+  {
+    "ingredientId": "38b1441f-52f5-40f4-8a2b-d53dccb3b2ae",
+    "ingredientName": "Cascarilla de soya",
+    "sourceProductCode": 838,
+    "sourceProductName": "Cascarilla de soya",
+    "matchType": "exact",
+    "matchNote": null,
+    "sourceOrigin": "M\u00e9xico",
+    "locationCode": "MX-SNIIM-MEXICO",
+    "effectiveDate": "2026-02-28",
+    "priceMxnPerKgAsFed": 2.75,
+    "createPriceDto": {
+      "priceMxnPerKgAsFed": 2.75,
+      "effectiveDate": "2026-02-28",
+      "locationCode": "MX-SNIIM-MEXICO"
+    },
+    "provenance": {
+      "sourcePageUrl": "http://www.economia-sniim.gob.mx/SNIIM-Pecuarios-Nacionales/SelIng.asp",
+      "sourceResultUrl": "http://www.economia-sniim.gob.mx/SNIIM-Pecuarios-Nacionales/e_Ing.asp",
+      "sourceQuery": {
+        "prod": "838",
+        "origen": "0",
+        "mes": "02",
+        "anio": "2026",
+        "RegPag": "1000"
+      }
+    }
+  },
+  {
+    "ingredientId": "38b1441f-52f5-40f4-8a2b-d53dccb3b2ae",
+    "ingredientName": "Cascarilla de soya",
+    "sourceProductCode": 838,
+    "sourceProductName": "Cascarilla de soya",
+    "matchType": "exact",
+    "matchNote": null,
+    "sourceOrigin": "Nuevo Le\u00f3n",
+    "locationCode": "MX-SNIIM-NUEVO_LEON",
+    "effectiveDate": "2026-02-28",
+    "priceMxnPerKgAsFed": 7.12,
+    "createPriceDto": {
+      "priceMxnPerKgAsFed": 7.12,
+      "effectiveDate": "2026-02-28",
+      "locationCode": "MX-SNIIM-NUEVO_LEON"
+    },
+    "provenance": {
+      "sourcePageUrl": "http://www.economia-sniim.gob.mx/SNIIM-Pecuarios-Nacionales/SelIng.asp",
+      "sourceResultUrl": "http://www.economia-sniim.gob.mx/SNIIM-Pecuarios-Nacionales/e_Ing.asp",
+      "sourceQuery": {
+        "prod": "838",
+        "origen": "0",
+        "mes": "02",
+        "anio": "2026",
+        "RegPag": "1000"
+      }
+    }
+  },
+  {
+    "ingredientId": "4fd42ff5-1667-423f-ba1b-8f637e690a3a",
+    "ingredientName": "Heno de alfalfa",
+    "sourceProductCode": 817,
+    "sourceProductName": "Alfalfa pacas",
+    "matchType": "proxy",
+    "matchNote": "La presentacion 'Alfalfa pacas' es la mas cercana al heno comercial para corral.",
+    "sourceOrigin": "Jalisco",
+    "locationCode": "MX-SNIIM-JALISCO",
+    "effectiveDate": "2026-02-28",
+    "priceMxnPerKgAsFed": 5.9,
+    "createPriceDto": {
+      "priceMxnPerKgAsFed": 5.9,
+      "effectiveDate": "2026-02-28",
+      "locationCode": "MX-SNIIM-JALISCO"
+    },
+    "provenance": {
+      "sourcePageUrl": "http://www.economia-sniim.gob.mx/SNIIM-Pecuarios-Nacionales/SelIng.asp",
+      "sourceResultUrl": "http://www.economia-sniim.gob.mx/SNIIM-Pecuarios-Nacionales/e_Ing.asp",
+      "sourceQuery": {
+        "prod": "817",
+        "origen": "0",
+        "mes": "02",
+        "anio": "2026",
+        "RegPag": "1000"
+      }
+    }
+  },
+  {
+    "ingredientId": "4fd42ff5-1667-423f-ba1b-8f637e690a3a",
+    "ingredientName": "Heno de alfalfa",
+    "sourceProductCode": 817,
+    "sourceProductName": "Alfalfa pacas",
+    "matchType": "proxy",
+    "matchNote": "La presentacion 'Alfalfa pacas' es la mas cercana al heno comercial para corral.",
+    "sourceOrigin": "Nuevo Le\u00f3n",
+    "locationCode": "MX-SNIIM-NUEVO_LEON",
+    "effectiveDate": "2026-02-28",
+    "priceMxnPerKgAsFed": 9.375,
+    "createPriceDto": {
+      "priceMxnPerKgAsFed": 9.375,
+      "effectiveDate": "2026-02-28",
+      "locationCode": "MX-SNIIM-NUEVO_LEON"
+    },
+    "provenance": {
+      "sourcePageUrl": "http://www.economia-sniim.gob.mx/SNIIM-Pecuarios-Nacionales/SelIng.asp",
+      "sourceResultUrl": "http://www.economia-sniim.gob.mx/SNIIM-Pecuarios-Nacionales/e_Ing.asp",
+      "sourceQuery": {
+        "prod": "817",
+        "origen": "0",
+        "mes": "02",
+        "anio": "2026",
+        "RegPag": "1000"
+      }
+    }
+  },
+  {
+    "ingredientId": "8e8a0c22-95d4-4f70-a01a-00ed062921c2",
+    "ingredientName": "Maiz molido",
+    "sourceProductCode": 804,
+    "sourceProductName": "Maiz amarillo",
+    "matchType": "proxy",
+    "matchNote": "SNIIM no publica 'Maiz molido' como tal; se usa 'Maiz amarillo' como proxy del grano energetico base.",
+    "sourceOrigin": "Jalisco",
+    "locationCode": "MX-SNIIM-JALISCO",
+    "effectiveDate": "2026-02-28",
+    "priceMxnPerKgAsFed": 4.84,
+    "createPriceDto": {
+      "priceMxnPerKgAsFed": 4.84,
+      "effectiveDate": "2026-02-28",
+      "locationCode": "MX-SNIIM-JALISCO"
+    },
+    "provenance": {
+      "sourcePageUrl": "http://www.economia-sniim.gob.mx/SNIIM-Pecuarios-Nacionales/SelIng.asp",
+      "sourceResultUrl": "http://www.economia-sniim.gob.mx/SNIIM-Pecuarios-Nacionales/e_Ing.asp",
+      "sourceQuery": {
+        "prod": "804",
+        "origen": "0",
+        "mes": "02",
+        "anio": "2026",
+        "RegPag": "1000"
+      }
+    }
+  },
+  {
+    "ingredientId": "8e8a0c22-95d4-4f70-a01a-00ed062921c2",
+    "ingredientName": "Maiz molido",
+    "sourceProductCode": 804,
+    "sourceProductName": "Maiz amarillo",
+    "matchType": "proxy",
+    "matchNote": "SNIIM no publica 'Maiz molido' como tal; se usa 'Maiz amarillo' como proxy del grano energetico base.",
+    "sourceOrigin": "Nuevo Le\u00f3n",
+    "locationCode": "MX-SNIIM-NUEVO_LEON",
+    "effectiveDate": "2026-02-28",
+    "priceMxnPerKgAsFed": 5.925,
+    "createPriceDto": {
+      "priceMxnPerKgAsFed": 5.925,
+      "effectiveDate": "2026-02-28",
+      "locationCode": "MX-SNIIM-NUEVO_LEON"
+    },
+    "provenance": {
+      "sourcePageUrl": "http://www.economia-sniim.gob.mx/SNIIM-Pecuarios-Nacionales/SelIng.asp",
+      "sourceResultUrl": "http://www.economia-sniim.gob.mx/SNIIM-Pecuarios-Nacionales/e_Ing.asp",
+      "sourceQuery": {
+        "prod": "804",
+        "origen": "0",
+        "mes": "02",
+        "anio": "2026",
+        "RegPag": "1000"
+      }
+    }
+  },
+  {
+    "ingredientId": "fb8d02cb-e98b-4420-87ca-b2d174333f4d",
+    "ingredientName": "Melaza de cana",
+    "sourceProductCode": 860,
+    "sourceProductName": "Melaza de ca\u00f1a",
+    "matchType": "exact",
+    "matchNote": null,
+    "sourceOrigin": "Nuevo Le\u00f3n",
+    "locationCode": "MX-SNIIM-NUEVO_LEON",
+    "effectiveDate": "2026-02-28",
+    "priceMxnPerKgAsFed": 6.23,
+    "createPriceDto": {
+      "priceMxnPerKgAsFed": 6.23,
+      "effectiveDate": "2026-02-28",
+      "locationCode": "MX-SNIIM-NUEVO_LEON"
+    },
+    "provenance": {
+      "sourcePageUrl": "http://www.economia-sniim.gob.mx/SNIIM-Pecuarios-Nacionales/SelIng.asp",
+      "sourceResultUrl": "http://www.economia-sniim.gob.mx/SNIIM-Pecuarios-Nacionales/e_Ing.asp",
+      "sourceQuery": {
+        "prod": "860",
+        "origen": "0",
+        "mes": "02",
+        "anio": "2026",
+        "RegPag": "1000"
+      }
+    }
+  },
+  {
+    "ingredientId": "ffc07a4b-1f72-47a9-b509-0971134eb690",
+    "ingredientName": "Pasta de canola",
+    "sourceProductCode": 830,
+    "sourceProductName": "Pasta de canola",
+    "matchType": "exact",
+    "matchNote": null,
+    "sourceOrigin": "Jalisco",
+    "locationCode": "MX-SNIIM-JALISCO",
+    "effectiveDate": "2026-02-28",
+    "priceMxnPerKgAsFed": 5.13,
+    "createPriceDto": {
+      "priceMxnPerKgAsFed": 5.13,
+      "effectiveDate": "2026-02-28",
+      "locationCode": "MX-SNIIM-JALISCO"
+    },
+    "provenance": {
+      "sourcePageUrl": "http://www.economia-sniim.gob.mx/SNIIM-Pecuarios-Nacionales/SelIng.asp",
+      "sourceResultUrl": "http://www.economia-sniim.gob.mx/SNIIM-Pecuarios-Nacionales/e_Ing.asp",
+      "sourceQuery": {
+        "prod": "830",
+        "origen": "0",
+        "mes": "02",
+        "anio": "2026",
+        "RegPag": "1000"
+      }
+    }
+  },
+  {
+    "ingredientId": "835e2ba5-f36a-468b-85e7-634db9180620",
+    "ingredientName": "Pasta de soya",
+    "sourceProductCode": 834,
+    "sourceProductName": "Pasta de soya",
+    "matchType": "exact",
+    "matchNote": null,
+    "sourceOrigin": "Jalisco",
+    "locationCode": "MX-SNIIM-JALISCO",
+    "effectiveDate": "2026-02-28",
+    "priceMxnPerKgAsFed": 7.35,
+    "createPriceDto": {
+      "priceMxnPerKgAsFed": 7.35,
+      "effectiveDate": "2026-02-28",
+      "locationCode": "MX-SNIIM-JALISCO"
+    },
+    "provenance": {
+      "sourcePageUrl": "http://www.economia-sniim.gob.mx/SNIIM-Pecuarios-Nacionales/SelIng.asp",
+      "sourceResultUrl": "http://www.economia-sniim.gob.mx/SNIIM-Pecuarios-Nacionales/e_Ing.asp",
+      "sourceQuery": {
+        "prod": "834",
+        "origen": "0",
+        "mes": "02",
+        "anio": "2026",
+        "RegPag": "1000"
+      }
+    }
+  },
+  {
+    "ingredientId": "7e07c643-982d-4236-9a70-3179c83afe51",
+    "ingredientName": "Sorgo rolado",
+    "sourceProductCode": 809,
+    "sourceProductName": "Sorgo molido",
+    "matchType": "proxy",
+    "matchNote": "SNIIM no reporto 'Sorgo rolado' en el ultimo corte; se usa 'Sorgo molido' como aproximacion operativa.",
+    "sourceOrigin": "M\u00e9xico",
+    "locationCode": "MX-SNIIM-MEXICO",
+    "effectiveDate": "2026-02-28",
+    "priceMxnPerKgAsFed": 5.75,
+    "createPriceDto": {
+      "priceMxnPerKgAsFed": 5.75,
+      "effectiveDate": "2026-02-28",
+      "locationCode": "MX-SNIIM-MEXICO"
+    },
+    "provenance": {
+      "sourcePageUrl": "http://www.economia-sniim.gob.mx/SNIIM-Pecuarios-Nacionales/SelIng.asp",
+      "sourceResultUrl": "http://www.economia-sniim.gob.mx/SNIIM-Pecuarios-Nacionales/e_Ing.asp",
+      "sourceQuery": {
+        "prod": "809",
+        "origen": "0",
+        "mes": "02",
+        "anio": "2026",
+        "RegPag": "1000"
+      }
+    }
+  },
+  {
+    "ingredientId": "7e07c643-982d-4236-9a70-3179c83afe51",
+    "ingredientName": "Sorgo rolado",
+    "sourceProductCode": 809,
+    "sourceProductName": "Sorgo molido",
+    "matchType": "proxy",
+    "matchNote": "SNIIM no reporto 'Sorgo rolado' en el ultimo corte; se usa 'Sorgo molido' como aproximacion operativa.",
+    "sourceOrigin": "Nuevo Le\u00f3n",
+    "locationCode": "MX-SNIIM-NUEVO_LEON",
+    "effectiveDate": "2026-02-28",
+    "priceMxnPerKgAsFed": 5.4,
+    "createPriceDto": {
+      "priceMxnPerKgAsFed": 5.4,
+      "effectiveDate": "2026-02-28",
+      "locationCode": "MX-SNIIM-NUEVO_LEON"
+    },
+    "provenance": {
+      "sourcePageUrl": "http://www.economia-sniim.gob.mx/SNIIM-Pecuarios-Nacionales/SelIng.asp",
+      "sourceResultUrl": "http://www.economia-sniim.gob.mx/SNIIM-Pecuarios-Nacionales/e_Ing.asp",
+      "sourceQuery": {
+        "prod": "809",
+        "origen": "0",
+        "mes": "02",
+        "anio": "2026",
+        "RegPag": "1000"
+      }
+    }
+  },
+  {
+    "ingredientId": "3f0602c8-17bf-4120-9672-b592e7fd061f",
+    "ingredientName": "Urea pecuaria",
+    "sourceProductCode": 863,
+    "sourceProductName": "Urea",
+    "matchType": "exact",
+    "matchNote": null,
+    "sourceOrigin": "La Laguna",
+    "locationCode": "MX-SNIIM-LA_LAGUNA",
+    "effectiveDate": "2026-02-28",
+    "priceMxnPerKgAsFed": 31.0,
+    "createPriceDto": {
+      "priceMxnPerKgAsFed": 31.0,
+      "effectiveDate": "2026-02-28",
+      "locationCode": "MX-SNIIM-LA_LAGUNA"
+    },
+    "provenance": {
+      "sourcePageUrl": "http://www.economia-sniim.gob.mx/SNIIM-Pecuarios-Nacionales/SelIng.asp",
+      "sourceResultUrl": "http://www.economia-sniim.gob.mx/SNIIM-Pecuarios-Nacionales/e_Ing.asp",
+      "sourceQuery": {
+        "prod": "863",
+        "origen": "0",
+        "mes": "02",
+        "anio": "2026",
+        "RegPag": "1000"
+      }
+    }
+  },
+  {
+    "ingredientId": "3f0602c8-17bf-4120-9672-b592e7fd061f",
+    "ingredientName": "Urea pecuaria",
+    "sourceProductCode": 863,
+    "sourceProductName": "Urea",
+    "matchType": "exact",
+    "matchNote": null,
+    "sourceOrigin": "Nuevo Le\u00f3n",
+    "locationCode": "MX-SNIIM-NUEVO_LEON",
+    "effectiveDate": "2026-02-28",
+    "priceMxnPerKgAsFed": 12.4,
+    "createPriceDto": {
+      "priceMxnPerKgAsFed": 12.4,
+      "effectiveDate": "2026-02-28",
+      "locationCode": "MX-SNIIM-NUEVO_LEON"
+    },
+    "provenance": {
+      "sourcePageUrl": "http://www.economia-sniim.gob.mx/SNIIM-Pecuarios-Nacionales/SelIng.asp",
+      "sourceResultUrl": "http://www.economia-sniim.gob.mx/SNIIM-Pecuarios-Nacionales/e_Ing.asp",
+      "sourceQuery": {
+        "prod": "863",
+        "origen": "0",
+        "mes": "02",
+        "anio": "2026",
+        "RegPag": "1000"
+      }
+    }
+  }
+]
