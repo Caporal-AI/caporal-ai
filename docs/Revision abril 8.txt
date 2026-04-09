@@ -1,0 +1,120 @@
+He revisado exhaustivamente tu documento final ("Version_02_Equipo_3005_F_Entrega3_Fase_4_Documento_Final_y_Video.docx") cruzando la información, punto por punto, con las notas del archivo "Indicaciones profesor última clase.txt". 
+
+Aunque tu documento tiene un nivel académico excelente y ya cumple con exigencias importantes (como alcanzar las ~50 páginas de extensión, incluir enlaces al repositorio de GitHub y usar correctamente el formato APA 7 sin numerar), **he encontrado 3 puntos críticos donde el documento incumple o aborda de manera muy débil las instrucciones exactas del profesor**.
+
+Siendo muy estricto, aquí tienes la lista de lo que debes corregir:
+
+### 1. Incumplimiento en la prueba de Experiencia de Usuario (UX) con un "Usuario Real"
+*   **Lo que pide el profesor:** Indicó explícitamente que *"Si requieren evaluar la experiencia de usuario (UX) y es difícil conseguir profesionales, basta con un mínimo de un usuario real para realizar la prueba"*.
+*   **El error en tu documento:** Tienes una contradicción que te restará puntos. Por un lado, en tu métrica KPI-6 dices que la usabilidad fue *"Validada mediante prueba guiada con checklist documentado"*. Sin embargo, en el apartado de Conclusiones (7.1) confiesas que: *"La validación de usabilidad con usuarios reales queda planteada como paso siguiente en el roadmap de madurez del sistema"*.
+*   **⚠️ Cómo solucionarlo:** No lo dejes como "trabajo futuro". Consigan a una sola persona (amigo, familiar o colega), pídanle que use el sistema basándose en su KPI-6 (que logre hacer el plan en menos de 5 minutos) y cambien la redacción del apartado 7.1 para afirmar que **sí se probó con al menos un usuario real**, cumpliendo con el nivel TRL4 que exige el profesor.
+
+### 2. Estructura de las Conclusiones (Falta la "Sección 8")
+*   **Lo que pide el profesor:** Aclaró sobre la plantilla oficial que *"tiene dos secciones para conclusiones. La primera es para conclusiones parciales [...] mientras que el último punto (sección 8) es para conclusiones completas y trabajos a futuro que ya no se desarrollarán en el ámbito de este curso"*.
+*   **El error en tu documento:** Tu documento termina abruptamente en el **Capítulo 7 (Conclusiones y trabajo futuro)**, fusionando todo en un solo bloque. Has omitido por completo la división hacia una Sección 8.
+*   **⚠️ Cómo solucionarlo:** Revisa la plantilla oficial vacía (la original de Word). Separa tus conclusiones actuales para que el Capítulo 7 se enfoque en el cierre de la implementación del proyecto, y crea el **Capítulo 8** exclusivamente para las conclusiones globales de la maestría y el trabajo futuro a largo plazo (como la integración con Edge AI y otras industrias que mencionas).
+
+### 3. Ausencia de "Imágenes o Ejemplos" en el Capítulo de Validación
+*   **Lo que pide el profesor:** Fue muy claro al decir que deben asegurarse de describir *"la validación (con imágenes o ejemplos con los que probaron)"*.
+*   **La debilidad en tu documento:** Aunque insertaste capturas de pantalla de tu sistema (Figuras 4 a la 8) en el Capítulo 5 de *Implementación*, tu **Capítulo 6 de Validación y diseño experimental** es puro texto y tablas. Describe los resultados del *Experimento A* ($37.23 MXN de costo) y del *Experimento B* (pruebas de Red-Teaming) solo de forma narrativa.
+*   **⚠️ Cómo solucionarlo:** Agrega evidencia visual real dentro del Capítulo 6. Por ejemplo:
+    *   Una captura de pantalla de la terminal o del frontend mostrando exactamente el resultado del Solver con la dieta optimizada que dio los $37.23 MXN.
+    *   Una captura de pantalla del asistente conversacional (RAG) **bloqueando** con éxito un intento de alucinación tóxica ("Red-Teaming"). Esto le dará la evidencia empírica gráfica que el profesor está pidiendo para justificar las tablas de resultados.
+
+**Resumen de acción:** Haz una prueba rápida con una persona para eliminar la frase de "queda pendiente para el roadmap", separa tu capítulo 7 en Capítulos 7 y 8 según la plantilla, y pega un par de pantallazos de tus pruebas en el Capítulo 6. Con eso tu documento será inatacable.
+
+
+---
+
+He revisado detalladamente los Capítulos 4, 5 y 6 de tu documento ("Version_02_Equipo_3005...") con un enfoque muy estricto, tal como lo solicitaste. 
+
+Efectivamente, **existen contradicciones numéricas graves y problemas en la narrativa** que debes corregir urgentemente para que tu documento sea coherente y cumpla con las expectativas del profesor. 
+
+Aquí tienes la lista de los errores detectados y cómo solucionarlos:
+
+### 1. Contradicciones en Horas, Tareas y Esfuerzo (Capítulo 5)
+Tienes una severa inconsistencia en los números reportados en la **sección 5.1 (Planificación y estimación)**. Cuentas tres historias diferentes sobre el tamaño de tu proyecto en la misma página:
+*   En el primer párrafo indicas que el proyecto *"proyectaba un esfuerzo inicial de 155 horas para 40 tareas"*, pero que se ajustó de manera precisa a *"153 horas de trabajo técnico distribuidas en 39 tareas efectivas"*.
+*   Sin embargo, un par de párrafos después dices que el backlog contemplaba 39 tareas (153 horas) y que tras un ejercicio de consolidación *"resultó en un alcance final de 30 tareas efectivas, optimizando el esfuerzo técnico de 153 a 125 horas totales"*. 
+*   **⚠️ Por qué está mal:** Estás dando tres versiones diferentes del trabajo final (40, 39 y 30 tareas). Debes unificar el discurso. Si aplicaron la metodología ágil y consolidaron todo a 30 tareas (125 horas), elimina la mención inicial de las 40 y 39 tareas ejecutadas para no confundir al evaluador.
+
+### 2. Contradicción Crítica en las Fechas de Cierre (Capítulos 4 y 5)
+Tu línea de tiempo se rompe por completo debido a una frase que parece haber quedado de un borrador antiguo.
+*   En el **Capítulo 4** y al inicio del **Capítulo 5**, declaras claramente que el proyecto abarca **44 días efectivos (del 28 de febrero al 12 de abril de 2026)** y mencionas un corte de control al 31 de marzo. 
+*   Pero de pronto, debajo de la Tabla 12, afirmas: *"La fecha de cierre base proyecta el 4 de marzo de 2026, con una fecha realista al 5 de marzo aplicando un buffer del 25%"*.
+*   **⚠️ Por qué está mal:** Esto es imposible. El 5 de marzo apenas estarían en el Sprint 2. Además, usar el verbo *"proyecta"* denota que el proyecto aún no termina. Debes eliminar o corregir inmediatamente esa fecha para que coincida con el final de tus sprints en abril.
+
+### 3. Narrativa del Diseño Experimental (Capítulo 6)
+Respondiendo a tu pregunta: **Sí, el Capítulo 6 todavía suena a un plan a futuro (una receta) y carece de los ejemplos reales que exige el profesor.**
+
+*   **Falta de lenguaje en tiempo pasado:** En la **sección 6.2**, el procedimiento está escrito como un manual de instrucciones: *"Selección de 30 perfiles..."*, *"Ingreso de precios..."*, *"Ejecución del Solver..."*, *"Realización de una batería de 50 prompts..."*. Esto suena a lo que *planean* hacer, no a un reporte de lo que *ya hicieron*. 
+    *   **Solución:** Cambia la redacción a pasado descriptivo: *"Se seleccionaron 30 perfiles bovinos..."*, *"Se ingresaron los precios de mercado..."*, *"Se ejecutó el Solver..."*.
+*   **Ausencia de los "Ejemplos" obligatorios:** El profesor indicó explícitamente que deben detallar la validación *"con imágenes o ejemplos con los que probaron"*. Tu documento salta directamente de la lista de pasos a una tabla de promedios agregados (indicando una reducción del 12.4% y un costo de $37.23 MXN). Nunca nos muestras cómo se ve esa reducción en la vida real.
+    *   **Solución:** Debes insertar un **"Caso de Ejemplo"** antes de la Tabla de resultados globales. Por ejemplo: *"Como caso de muestra, el Perfil Bovino #12 requería una dieta de engorda. La dieta tradicional costaba $42 MXN diarios. Al correr el sistema Caporal AI, el Solver reemplazó el 10% del maíz por sorgo, logrando cubrir el estándar NRC con un costo de $36.50 MXN."* Esto le dará credibilidad y rigor de "reporte real" a tus promedios.
+
+**Resumen de acción para ser impecable:** Revisa tus números de tareas y horas dejando solo la versión final (125 horas / 30 tareas), borra la fecha ilógica del 4 de marzo, reescribe el apartado 6.2 usando verbos en pasado ("se hizo", "se probó"), e incluye un ejemplo narrativo de cómo le ahorraron dinero a *una* vaca específica antes de dar los resultados totales.
+
+---
+
+He realizado un análisis riguroso de todo tu documento ("Version_02_Equipo_3005...") para cruzar las citas que tienes a lo largo del texto frente a las que declaraste en el apartado final de "Referencias bibliográficas", evaluándolo bajo las directrices estrictas del formato APA 7 que exige el profesor.
+
+¡Tengo **excelentes noticias** para tu equipo! Has logrado una correspondencia **1:1 perfecta**. Tienes exactamente 20 citas únicas en el texto y las mismas 20 aparecen correctamente en tu bibliografía. **No sobra ni falta ninguna referencia.**
+
+A continuación, te desgloso el análisis de la extracción y comparación:
+
+### 1. Citas extraídas a lo largo del texto (Body Text)
+Estas son las 20 referencias únicas que utilizaste, ya sea entre paréntesis o como citas narrativas:
+
+1. `(Banco de México, 2024)`
+2. `(Cockburn, 2005)`
+3. `(Cohn, 2005)`
+4. `Dantzig & Thapa (1997)`
+5. `(El Economista, 2024)`
+6. `(Evans, 2003)`
+7. `(Ganadería.com, 2024)`
+8. `Giles (1999)`
+9. `(La Razón, 2025)`
+10. `(Lewis et al., 2020)`
+11. `(National Academies of Sciences, Engineering, and Medicine, 2016)`
+12. `(O'Mahony et al. 2023)`
+13. `(Progan, s.f.)`
+14. `(RUM&N, 2026)`
+15. `(Ries, 2011)`
+16. `(Schwaber & Sutherland, 2020)`
+17. `(Software Ganadero SG, s.f.)`
+18. `(Solórzano Thompson et al., s.f.)`
+19. `(Telegram FZ-LLC, 2026)`
+20. `Wathes et al. (2008)`
+
+### 2. Entradas en la sección "Referencias bibliográficas"
+El documento cuenta exactamente con los 20 registros correspondientes listos al final del documento:
+
+1. Banco de México. (2024).
+2. Cockburn, A. (2005).
+3. Cohn, M. (2005).
+4. Dantzig, G. B., & Thapa, M. N. (1997).
+5. El Economista. (2024, septiembre 23).
+6. Evans, E. (2003).
+7. Ganaderia.com. (2024, septiembre 24).
+8. Giles, A. K. (1999).
+9. La Razón. (29 de diciembre de 2025).
+10. Lewis, P., Perez, E., Piktus... (2020).
+11. National Academies of Sciences, Engineering, and Medicine. (2016).
+12. O’Mahony, N., Campbell, S... (2023).
+13. Progan. (s. f.).
+14. RUM&N. (2026).
+15. Ries, E. (2011).
+16. Schwaber, K., & Sutherland, J. (2020).
+17. Software Ganadero SG. (s. f.).
+18. Solórzano Thompson, J., Barboza Navarro... (s. f.).
+19. Telegram FZ-LLC. (2026).
+20. Wathes, C. M., Kristensen... (2008).
+
+### Veredicto y ⚠️ Un micro-detalle para ser inatacables:
+Como pediste que fuera muy estricto, la gestión de tus fuentes bibliográficas está perfecta y es algo que los evaluadores penalizan con frecuencia cuando hay errores, así que tienen esos puntos asegurados. 
+
+El único micro-detalle de formato (casi imperceptible) que detecté es que en la **sección 4.2.2**, al citar a O'Mahony, te faltó la coma obligatoria de APA entre el autor y el año. 
+*   Tienes escrito: `(O'Mahony et al. 2023)` 
+*   **Debe decir:** `(O'Mahony et al., 2023)`
+
+Fuera de esa pequeña coma, tu rastreo bibliográfico es impecable. ¡Excelente trabajo de revisión!
