@@ -43,7 +43,6 @@ venv/
 # Test artifacts
 .playwright/
 test-results/
-data/experiments/reports/*
 !data/experiments/reports/.gitkeep
 data/rag/reports/*.json
 

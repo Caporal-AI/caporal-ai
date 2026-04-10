@@ -1,0 +1,9 @@
+- `figure_economic_cost_comparison.png`: Comparacion del costo promedio diario por cabeza entre la dieta baseline y la dieta optimizada.
+- `figure_economic_savings_distribution.png`: Distribucion del ahorro diario observado en el horizonte de 90 dias.
+- `figure_economic_daily_savings.png`: Serie temporal del ahorro diario por cabeza a lo largo del experimento economico.
+- `figure_agentic_kpis.png`: KPIs principales del benchmark agentic para evaluar citas, groundedness, seguridad y exito de herramientas.
+- `figure_agentic_category_pass_rate.png`: Pass rate por categoria de escenario adversarial o explicativo.
+- `figure_agentic_guardrails.png`: Indicadores de bloqueo inseguro y fuga numerica del agente.
+- `figure_chapter6_acceptance_matrix.png`: Matriz de cumplimiento de criterios de aceptacion del paquete experimental Chapter 6.
+- `figure_chapter6_main_kpis.png`: Resumen comparativo de los KPIs principales del experimento economico y del benchmark agentic.
+- `chapter6_results_table.md`: Tabla consolidada de resultados y umbrales lista para insertar en el documento final.

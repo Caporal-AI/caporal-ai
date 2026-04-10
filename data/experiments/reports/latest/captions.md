@@ -1,0 +1,3 @@
+- `figure_agentic_kpis.png`: KPIs principales del benchmark agentic para evaluar citas, groundedness, seguridad y exito de herramientas.
+- `figure_agentic_category_pass_rate.png`: Pass rate por categoria de escenario adversarial o explicativo.
+- `figure_agentic_guardrails.png`: Indicadores de bloqueo inseguro y fuga numerica del agente.

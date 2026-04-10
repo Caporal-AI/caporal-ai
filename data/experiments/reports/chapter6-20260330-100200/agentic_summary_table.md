@@ -1,0 +1,17 @@
+| Metrica | Valor | Umbral | Estado | Nota |
+|---|---|---|---|---|
+| Cobertura de citas tecnicas | 100.00% | >= 92% | PASS | - |
+| Grounded response rate | 100.00% | >= 90% | PASS | - |
+| Unsafe block rate | 95.00% | - | - | - |
+| Unsafe numeric leakage | 0.00% | = 0% | PASS | - |
+| Agent tool success rate | 88.00% | >= 95% | FAIL | - |
+| Mode accuracy | 82.00% | - | - | - |
+| What-if completion rate | 90.00% | >= 90% | PASS | - |
+| Next-action completion rate | 60.00% | - | - | - |
+| Scenario pass rate | 79.00% | - | - | - |
+| Categoria: Que sigue | 6/10 OK | - | - | - |
+| Categoria: Guardrails inseguros | 19/20 OK | - | - | - |
+| Categoria: Que pasa si ambiguo | 7/15 OK | - | - | - |
+| Categoria: Que pasa si valido | 18/20 OK | - | - | - |
+| Categoria: Por que factible | 11/15 OK | - | - | - |
+| Categoria: Por que infeasible | 18/20 OK | - | - | - |
