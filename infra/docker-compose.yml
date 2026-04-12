@@ -55,6 +55,7 @@ services:
       DB_NAME: caporal
       COMPUTE_BASE_URL: http://compute:8000
       COMPUTE_TIMEOUT_MS: 5000
+      COMPUTE_AGENT_TIMEOUT_MS: 15000
       CHOKIDAR_USEPOLLING: "true"
     depends_on:
       postgres:

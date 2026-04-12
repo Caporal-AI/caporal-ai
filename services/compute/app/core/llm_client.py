@@ -17,12 +17,16 @@ def render_with_openai(
         return base_answer
 
     model = config["model"]
+    timeout_sec = _resolve_llm_timeout_sec()
     try:
         from openai import OpenAI
     except Exception:
         return base_answer
 
-    client_kwargs: dict[str, str] = {"api_key": config["api_key"]}
+    client_kwargs: dict[str, Any] = {
+        "api_key": config["api_key"],
+        "timeout": timeout_sec,
+    }
     if config["base_url"]:
         client_kwargs["base_url"] = config["base_url"]
     client = OpenAI(**client_kwargs)
@@ -46,6 +50,18 @@ def render_with_openai(
             return text if text else base_answer
         except Exception:
             return base_answer
+
+
+def _resolve_llm_timeout_sec() -> float:
+    raw_value = os.getenv("LLM_REQUEST_TIMEOUT_SEC", "3.5").strip()
+    try:
+        value = float(raw_value)
+    except ValueError:
+        return 3.5
+
+    if value <= 0:
+        return 3.5
+    return value
 
 
 def _resolve_llm_config(llm_mode: str) -> dict[str, str] | None:

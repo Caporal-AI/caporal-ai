@@ -25,6 +25,7 @@ export class FastApiComputeHttpAdapter implements ComputeClientPort {
   private readonly logger = new Logger(FastApiComputeHttpAdapter.name);
   private readonly baseUrl: string;
   private readonly timeoutMs: number;
+  private readonly agentTimeoutMs: number;
   private readonly maxRetries = 2;
   private readonly breakerFailureThreshold = 3;
   private readonly breakerOpenMs = 20_000;
@@ -38,6 +39,9 @@ export class FastApiComputeHttpAdapter implements ComputeClientPort {
   ) {
     this.baseUrl = this.configService.get<string>('COMPUTE_BASE_URL', 'http://localhost:8000');
     this.timeoutMs = Number(this.configService.get<string>('COMPUTE_TIMEOUT_MS', '5000'));
+    this.agentTimeoutMs = Number(
+      this.configService.get<string>('COMPUTE_AGENT_TIMEOUT_MS', '15000'),
+    );
   }
 
   optimize(payload: OptimizeRequest, correlationId: string): Promise<OptimizeResponse> {
@@ -75,7 +79,7 @@ export class FastApiComputeHttpAdapter implements ComputeClientPort {
         const startedAt = Date.now();
         const response = await firstValueFrom(
           this.httpService.post<T>(`${this.baseUrl}${path}`, payload, {
-            timeout: this.timeoutMs,
+            timeout: this.resolveTimeoutMs(path),
             headers: {
               'x-correlation-id': correlationId,
             },
@@ -150,5 +154,13 @@ export class FastApiComputeHttpAdapter implements ComputeClientPort {
     await new Promise((resolve) => {
       setTimeout(resolve, ms);
     });
+  }
+
+  private resolveTimeoutMs(path: string): number {
+    if (path === '/v1/agent/respond') {
+      return this.agentTimeoutMs;
+    }
+
+    return this.timeoutMs;
   }
 }
